@@ -1,0 +1,34 @@
+[submodule=accordion] {
+	margin-bottom: 30px;
+	> .flex {
+		flex-direction: column;
+	}
+
+	.element {
+		margin-bottom: 2px;
+	}
+
+	[task=accordion_title] {
+		font-size: $font-m;
+		font-weight: bold;
+		padding: 8px 18px;
+		background-color: $cl-main-black;
+		cursor: pointer;
+		p {
+			margin: 0;
+			text-align: center;
+		}
+
+		&:hover {
+			background-color: $cl-main-black-60;
+		}
+	}
+
+	[task=accordion_content] {
+		height: 0px;
+		overflow: hidden;
+		&.active {
+			height: auto;
+		}
+	}
+}

@@ -1,0 +1,3 @@
+<div submodule="equipment">
+
+</div>

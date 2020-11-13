@@ -1,0 +1,15 @@
+div[task=base]{
+
+	
+
+	.element[title=base_body] {
+		[task=accordion_content] {
+			> .flex {
+				flex-wrap: wrap;
+			}
+		}
+		.input-box {
+			flex-basis: calc(30% - 40px);
+		}
+	}
+}

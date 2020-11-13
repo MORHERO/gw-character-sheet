@@ -1,0 +1,119 @@
+@import "basic/variables";
+
+
+@import "basic/debug";
+
+/*-----|| fonts ||----------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
+
+
+
+
+/*-----|| custom global definitions ||-----------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
+
+html, body {
+	margin: 0;
+	background-color: $cl-main;
+	color: $cl-font;
+}
+
+main {
+	padding: 0px 20px;
+	> .inner {
+		max-width: $doc-width;
+		margin: 0px auto;
+		padding: 20px 0px;
+	}
+}
+
+.main-flex {
+	display: flex;
+	justify-content: center;
+}
+
+.flex {
+	display: flex;
+}
+
+.col- {
+	&1 {
+		max-width: $doc-width / 4;
+		width: $doc-width / 4;
+	}
+	&2 {
+		max-width: $doc-width / 2;
+		width: $doc-width / 2;
+	}
+	&3 {
+		max-width: ($doc-width / 4) * 3;
+		width: ($doc-width / 4) * 3;
+	}
+	&4 {
+		max-width: $doc-width;
+		width: $doc-width;
+	}
+}
+
+.module {
+	padding: 10px;
+}
+
+.button, button {
+	background-color: $cl-main;
+	border: 1px $cl-grey solid;
+	padding: 4px 8px;
+	margin-right: 2px;
+	color: $cl-grey;
+	cursor: pointer;
+	-webkit-touch-callout: none; /* iOS Safari */
+	-webkit-user-select: none; /* Safari */
+	-khtml-user-select: none; /* Konqueror HTML */
+	-moz-user-select: none; /* Old versions of Firefox */
+	-ms-user-select: none; /* Internet Explorer/Edge */
+	user-select: none; /* Non-prefixed version, currently
+	supported by Chrome, Edge, Opera and Firefox */
+	
+	&:hover {
+		background-color: $cl-main-dark;
+	}
+
+	&.active {
+		background-color: $cl-main-black;
+		border: 1px $cl-grey solid;
+	}
+}
+.input-box {
+	margin: 10px 12px 16px;
+}
+.input-wrap {
+	text-align: center;
+	margin:20px;
+	font-size: $font-s;
+	font-weight: bold;
+	input, button {
+		min-width: 150px;
+		font-size: $font-s;
+		background-color: $cl-main-black-60;
+		color: $cl-grey;
+	}
+	button {
+		margin-top: $font-s;
+
+		
+	}
+}
+
+
+
+/*-----|| import content ||----------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
+
+@import "templates/header";
+@import "templates/navigation";
+@import "templates/footer";
+
+@import "modules/main-slider";
+@import "modules/accordion";
+
+@import "modules/slides/1_base";

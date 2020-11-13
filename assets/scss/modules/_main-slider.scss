@@ -1,0 +1,55 @@
+.master-slider-wrapper {
+	position: relative;
+	max-width: $bp-m;
+	margin: 20px;
+	.tns-controls {
+		display: flex;
+		justify-content: space-between;
+		pointer-events: none;
+		
+		button {
+			pointer-events: auto;
+			padding: 12px 18px 10px;
+			font-size: 20px;
+			font-weight: bold;
+			text-transform: uppercase;
+			color: $cl-grey;
+			border-color: $cl-grey;
+
+			&.disabled, &[disabled] {
+				color: $cl-main-black-60;
+				border-color: $cl-main-black-60;
+				background-color: $cl-main-dark;
+				cursor:auto;
+				pointer-events: none;
+			}
+		}
+	}
+
+	.tns-nav {
+		display: flex;
+		justify-content: center;
+		position: absolute;
+		bottom: 14px;
+		width: 100%;
+		pointer-events: none;
+		button {
+			border-radius: 50%;
+			height: 20px;
+			width: 20px;
+			&.tns-nav-active {
+				background-color: $cl-grey;
+			}
+		}
+	}
+
+	[module="master-slider"] {
+
+		.slide {
+			.flex {
+				justify-content: space-evenly;
+			}
+		}
+	}
+}
+
