@@ -1,0 +1,38 @@
+[submodule="header"] {
+	margin-bottom: 1em;
+	> .flex {
+
+	}
+	.media-wrap {
+		margin-right: 1em;
+		.media {
+			width: 5em;
+			height: 5em;
+			background-color: $cl-main-dark;
+			border: 1px solid $cl-grey;
+		}
+	}
+	.info-wrap {
+		[item="base_name_main"], [item="base_name_nick"] {
+			font-size: 2em;
+			margin: 0.25em 0em 0em 0em;
+		}
+		[item="base_gender"], [item="base_race"] {
+			font-size: 0.75em;
+			margin: 0.75em 0em 0em 0em;
+		}
+
+		[item="base_name_main"], [item="base_gender"] {
+			position: relative;
+			margin-right: 12px;
+			&:after {
+				content: " ";
+				position: absolute;
+				border: 1px solid $cl-main-dark;
+				height: 100%;
+				right: -7px;
+				bottom: 0px;
+			}
+		}
+	}
+}

@@ -31,7 +31,7 @@
 								<?php 
 									include 'modules/parts/character_navigation.php';
 								?>
-								<div class="content-slider">
+								<div module="content-slider">
 									<div class="slide">
 										<?php include 'modules/parts/character_skills.php'; ?>
 									</div>

@@ -1,0 +1,23 @@
+[submodule='skills'] {
+	padding:0.5em;
+	[submodule='accordion'] {
+		[task='accordion_title'] p{
+			font-size: $font-xs;
+		}
+	}
+	[item='skill'].flex {
+		padding: 0em 0.5em;
+		&:first-child {
+			padding-top: 0.5em;
+		}
+		&:last-child {
+			padding-bottom: 0.5em;
+		}
+		div {
+			flex-basis:50%;
+		}
+		button {font-size: $font-s;}
+		span {line-height: $font-m;}
+
+	}
+}

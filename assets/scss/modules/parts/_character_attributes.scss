@@ -1,0 +1,32 @@
+[submodule="attributes"] {
+	> .flex {
+	}
+	.attributes-wrapper {
+		margin-right: 1em;
+		>.flex {
+			flex-direction: column;
+		}
+		.attribute {
+			border: 1px solid $cl-grey;
+			margin-bottom: 1em;
+			padding: 0.5em;
+			.title {
+				width: 100%;
+				margin-bottom: 0.5em;
+				p{
+					text-align: center;
+					margin: 0;
+				}
+			}
+			.value {
+				button {
+					border-radius: 50%;
+					border: 1px solid $cl-grey;
+					width: 100%;
+					font-size: 2em;
+					padding: 0;
+				}
+			}
+		}
+	}
+}

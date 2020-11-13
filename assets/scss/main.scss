@@ -74,6 +74,10 @@ main {
 	user-select: none; /* Non-prefixed version, currently
 	supported by Chrome, Edge, Opera and Firefox */
 	
+	&.btn-clean {
+		border:none;
+	}
+
 	&:hover {
 		background-color: $cl-main-dark;
 	}
@@ -99,10 +103,10 @@ main {
 	}
 	button {
 		margin-top: $font-s;
-
-		
 	}
 }
+
+
 
 
 
@@ -113,7 +117,13 @@ main {
 @import "templates/navigation";
 @import "templates/footer";
 
-@import "modules/main-slider";
 @import "modules/accordion";
 
-@import "modules/slides/1_base";
+@import "modules/parts/character_header";
+@import "modules/parts/character_attributes";
+@import "modules/parts/character_navigation";
+@import "modules/parts/character_skills";
+@import "modules/parts/character_fight";
+@import "modules/parts/character_magic";
+@import "modules/parts/character_equipment";
+@import "modules/parts/character_base";
