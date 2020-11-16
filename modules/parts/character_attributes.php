@@ -3,75 +3,126 @@
 
 		<div class="attributes-wrapper">
 			<div class="flex">
-				<div class="attribute">
-					<div class="title"><p>AUS</p></div>
-					<div class="value"><button item="attribute_charisma" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>BEW</p></div>
-					<div class="value"><button item="attribute_dexterity" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>INT</p></div>
-					<div class="value"><button item="attribute_intuition" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>KON</p></div>
-					<div class="value"><button item="attribute_constitution" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>MYS</p></div>
-					<div class="value"><button item="attribute_mystic" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>STÄ</p></div>
-					<div class="value"><button item="attribute_strength" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>VER</p></div>
-					<div class="value"><button item="attribute_intelligence" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>WIL</p></div>
-					<div class="value"><button item="attribute_willpower" class="btn-clean">0</button></div>
-				</div>
+
+				<?php
+					$attributes = array(
+						[
+							'title' => 'Ausstrahlung',
+							'title_short' => 'AUS',
+							'value' => 0
+						],
+						[
+							'title' => 'Beweglichkeit',
+							'title_short' => 'BEW',
+							'value' => 0
+						],
+						[
+							'title' => 'Intuition',
+							'title_short' => 'INT',
+							'value' => 0
+						],
+						[
+							'title' => 'Konstitution',
+							'title_short' => 'KON',
+							'value' => 0
+						],
+						[
+							'title' => 'Mystik',
+							'title_short' => 'MYS',
+							'value' => 0
+						],
+						[
+							'title' => 'Stärke',
+							'title_short' => 'STÄ',
+							'value' => 0
+						],
+						[
+
+							'title' => 'Verstand',
+							'title_short' => 'VER',
+							'value' => 0
+						],
+						[
+							'title' => 'Willenskraft',
+							'title_short' => 'WIL',
+							'value' => 0
+						]
+					);
+
+					foreach ($attributes as $key => $attribute) {
+					?>
+						<div class="attribute">
+							<div class="title"><p><?php echo($attribute['title_short']); ?></p></div>
+							<div class="value"><button item="attribute_" class="btn-clean"><?php echo($attribute['value']); ?></button></div>
+							<button task="decrease" class="setting pos-11 btn-clean">-</button>
+							<button task="increase" class="setting pos-1 btn-clean">+</button>
+							<button task="close" class="setting pos-6 btn-clean">x</button>
+						</div>
+					<?php
+					}
+				?>
 			</div>
 		</div>
 
 		<div class="attributes-wrapper">
 			<div class="flex">
-				<div class="attribute">
-					<div class="title"><p>GK</p></div>
-					<div class="value"><button item="attribute_size" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>GSW</p></div>
-					<div class="value"><button item="attribute_speed" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>INI</p></div>
-					<div class="value"><button item="attribute_initiative" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>LP</p></div>
-					<div class="value"><button item="attribute_health" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>FK</p></div>
-					<div class="value"><button item="attribute_mana" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>VTD</p></div>
-					<div class="value"><button item="attribute_defense" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>GW</p></div>
-					<div class="value"><button item="attribute_resistance_mind" class="btn-clean">0</button></div>
-				</div>
-				<div class="attribute">
-					<div class="title"><p>KG</p></div>
-					<div class="value"><button item="attribute_resistance_body" class="btn-clean">0</button></div>
-				</div>
+				<?php
+					$attributes = array(
+						[
+							'title' => 'Größenklasse',
+							'title_short' => 'GK',
+							'value' => 0
+						],
+						[
+							'title' => 'Geschwindigkeit',
+							'title_short' => 'GSW',
+							'value' => 0
+						],
+						[
+							'title' => 'Initiative',
+							'title_short' => 'INI',
+							'value' => 0
+						],
+						[
+							'title' => 'Lebenspunkte',
+							'title_short' => 'LP',
+							'value' => 0
+						],
+						[
+							'title' => 'Fokus',
+							'title_short' => 'FK',
+							'value' => 0
+						],
+						[
+							'title' => 'Verteidigung',
+							'title_short' => 'VTD',
+							'value' => 0
+						],
+						[
+
+							'title' => 'Geistige Willenskraft',
+							'title_short' => 'GW',
+							'value' => 0
+						],
+						[
+							'title' => 'Körperliche Willenskraft',
+							'title_short' => 'KW',
+							'value' => 0
+						]
+					);
+
+					foreach ($attributes as $key => $attribute) {
+					?>
+						<div class="attribute">
+							<div class="title"><p><?php echo($attribute['title_short']); ?></p></div>
+							<div class="value"><button item="attribute_" class="btn-clean"><?php echo($attribute['value']); ?></button></div>
+							<button task="decrease" class="setting pos-11 btn-clean">-</button>
+							<button task="increase" class="setting pos-1 btn-clean">+</button>
+							<button task="close" class="setting pos-6 btn-clean">x</button>
+						</div>
+					<?php
+					}
+				?>
 			</div>
 		</div>
 
