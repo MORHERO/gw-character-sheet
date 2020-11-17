@@ -9,14 +9,16 @@
 		.attribute {
 			position: relative;
 			border: 1px solid $cl-grey;
-			margin-bottom: 1em;
+			margin-bottom: 0.5em;
 			padding: 0.5em;
 			&.active-item-settings {
 				
 			}
 			.title {
+				font-size: $font-xs;
 				width: 100%;
-				margin-bottom: 0.5em;
+				margin-bottom: 0.2em;
+				margin-top: -0.2em;
 				p {
 					text-align: center;
 					margin: 0;
@@ -27,8 +29,11 @@
 					border-radius: 50%;
 					border: 1px solid $cl-grey;
 					width: 100%;
-					font-size: 2em;
-					padding: 0;
+					padding: 0 0 0 2px;
+					font-size: 100%;
+					height: 2.5em;
+					width: 2.5em;
+					margin-left: 1px;
 				}
 			}
 			.setting {
