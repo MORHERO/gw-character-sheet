@@ -1,4 +1,4 @@
-<? include_once('./modules/get_character.php'); ?>
+<? //include_once('./modules/get_character.php'); ?>
 
 <!DOCTYPE html>
 <html>

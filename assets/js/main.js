@@ -1,3 +1,35 @@
+const url_params = new URLSearchParams(window.location.search)
+const uid = url_params.get('uid');
+var xhttp = new XMLHttpRequest();
+var character_full = [];
+xhttp.onreadystatechange = function() {
+	if (this.readyState == 4 && this.status == 200) {
+		character_full = JSON.parse(this.responseText);
+		character_loaded();
+		//return JSON.parse(this.responseText);
+	}
+};
+xhttp.open("GET", './modules/get_character.php?uid='+ uid, true);
+xhttp.send();
+/*
+class DB {
+	constructor() {
+		this.xhttp = new XMLHttpRequest();
+		this.;
+		this.data = [];
+	}
+	set_data() {
+		 this.exec_ajax();
+	}
+
+	exec_ajax(target) {
+		const that = this;
+		this.
+	}
+}
+const db = new DB();*/
+//var character_full = db.get_character();
+
 const main_module = document.querySelector('[module=character-sheet]');
 const active_item_settings_classname = 'active-item-settings';
 
@@ -102,6 +134,8 @@ class ITEM_ATTRIBUTE {
 		this.update_attribute();
 	}
 	toggle_active() {
+		console.log(character_full);
+		
 		if(this.active) {
 			this.parent.classList.remove(this.active_classname);
 			this.active = false;
@@ -118,14 +152,25 @@ class ITEM_ATTRIBUTE {
 		}
 		this.update_attribute();
 	}
-	update_attribute() {
-		this.button.innerHTML = this.value;
+	update_attribute(value=this.value) {
+		this.button.innerHTML = value;
 	}
 }
 const attribute_elements = document.querySelectorAll('[submodule=attributes] .attribute');
 const attribute_element_list = [];
+const attribute_types = [];
 
 for (let i = 0; i < attribute_elements.length; i++) {
-	attribute_element_list.push(new ITEM_ATTRIBUTE(attribute_elements[i], active_item_settings_classname));
+	let type = attribute_elements[i].getAttribute('item');
+	
+	attribute_element_list[type] = new ITEM_ATTRIBUTE(attribute_elements[i], active_item_settings_classname);
+	attribute_types.push(type);
 }
 
+function character_loaded() {
+	//console.log(character_full);
+
+	for (let i = 0; i < attribute_types.length; i++) {
+		attribute_element_list[attribute_types[i]].update_attribute(character_full[attribute_types[i]])
+	}
+}
