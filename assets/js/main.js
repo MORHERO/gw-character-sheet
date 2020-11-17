@@ -5,6 +5,7 @@ var character_full = [];
 xhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
 		character_full = JSON.parse(this.responseText);
+		setup_character_data();
 		character_loaded();
 		//return JSON.parse(this.responseText);
 	}
@@ -167,10 +168,24 @@ for (let i = 0; i < attribute_elements.length; i++) {
 	attribute_types.push(type);
 }
 
+class ITEM_SKILLS() {
+
+}
+
+
+function setup_character_data() {
+	character_full['attributes'] = JSON.parse(character_full['attributes']);
+	character_full['attributes_special'] = JSON.parse(character_full['attributes_special']);
+	character_full['base_xp'] = JSON.parse(character_full['base_xp']);
+	character_full['money'] = JSON.parse(character_full['money']);
+	character_full['skills_fight'] = JSON.parse(character_full['skills_fight']);
+	character_full['skills_magic'] = JSON.parse(character_full['skills_magic']);
+	character_full['skills_main'] = JSON.parse(character_full['skills_main']);
+}
 function character_loaded() {
-	//console.log(character_full);
+	console.log(character_full);
 
 	for (let i = 0; i < attribute_types.length; i++) {
-		attribute_element_list[attribute_types[i]].update_attribute(character_full[attribute_types[i]])
+		attribute_element_list[attribute_types[i]].update_attribute(character_full['attributes'][attribute_types[i]])
 	}
 }

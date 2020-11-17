@@ -58,7 +58,7 @@
 
 					foreach ($attributes as $key => $attribute) {
 					?>
-						<div class="attribute" item="attribute_<?php echo($attribute['type']); ?>">
+						<div class="attribute" item="<?php echo($attribute['type']); ?>">
 							<div class="title"><p><?php echo($attribute['title_short']); ?></p></div>
 							<div class="value"><button class="btn-clean"><?php echo($attribute['value']); ?></button></div>
 							<button task="decrease" class="setting pos-11 btn-clean">-</button>
@@ -128,7 +128,7 @@
 
 					foreach ($attributes as $key => $attribute) {
 					?>
-						<div class="attribute" item="attribute_<?php echo($attribute['type']); ?>">
+						<div class="attribute" item="<?php echo($attribute['type']); ?>">
 							<div class="title"><p><?php echo($attribute['title_short']); ?></p></div>
 							<div class="value"><button class="btn-clean"><?php echo($attribute['value']); ?></button></div>
 							<button task="decrease" class="setting pos-11 btn-clean">-</button>
