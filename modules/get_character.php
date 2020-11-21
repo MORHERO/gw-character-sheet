@@ -24,6 +24,7 @@ if(isset($_GET['uid'])) {
 	if ($sql_result->num_rows > 0) {
 		// output data of each row
 		while($row = $sql_result->fetch_assoc()) {
+			//var_dump($row);
 			echo(json_encode($row));
 		}
 	} else {

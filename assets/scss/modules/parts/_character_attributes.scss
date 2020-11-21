@@ -46,6 +46,7 @@
 				line-height: 0px;
 				pointer-events:none;
 				opacity: 0;
+				z-index: 1;
 				transition: left ease 250ms, right ease 250ms, top ease 250ms, bottom ease 250ms, opacity ease 500ms;
 				
 				&:hover {
@@ -88,7 +89,7 @@
 					opacity: 1;
 					&.pos-1 {
 						top: 25%;
-						right: -15%;
+						right: -16%;
 					}
 					&.pos-2 {
 					}
@@ -112,7 +113,7 @@
 					}
 					&.pos-11 {
 						top: 25%;
-						left: -10%;
+						left: -15%;
 					}
 					&.pos-12 {
 					}
