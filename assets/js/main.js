@@ -5,7 +5,7 @@ const uid = url_params.get('uid');
 var xhttp = new XMLHttpRequest();
 xhttp.onreadystatechange = function() {
 	if (this.readyState == 4 && this.status == 200) {
-		console.log(this.responseText);
+		//console.log(this.responseText);
 		character_full = JSON.parse(this.responseText);
 		setup_character_data();
 		character_loaded();
@@ -364,14 +364,9 @@ class CHARACTER {
 		this.attribute.parent.addEventListener('click', function(e) {
 			if(e.target.hasAttribute('task', 'attribute-main')) {
 				that.toggle_active(e.target);
-			}
-			if(e.target.hasAttribute('task', 'decrease')) {
+			}else if(e.target.hasAttribute('task', 'decrease') || e.target.hasAttribute('task', 'increase')) {
 				that.update_attribute(e.target.getAttribute('task'), e.target);
-			}
-			if(e.target.hasAttribute('task', 'increase')) {
-				that.update_attribute(e.target.getAttribute('task'), e.target);
-			}
-			if(e.target.hasAttribute('task', 'close')) {
+			}else if(e.target.hasAttribute('task', 'close')) {
 				that.toggle_active(e.target);
 			}
 		});
@@ -390,6 +385,12 @@ class CHARACTER {
 		console.log('char_setup done');
 	}
 
+	//#########
+	//### SETUP DOM FUNCTIONS
+	//#########
+	_setup_header_dom() {
+		// TODO ~116
+	}
 	_setup_attributes_dom() {
 		for (let _i = 0; _i < this._attributes.length; _i++) {
 			let attribute_list = this._attributes[_i];
@@ -465,21 +466,31 @@ class CHARACTER {
 		}
 		return;
 	}
+	_setup_skills_dom() {
+		// TODO ~187
+	}
+	_setup_inventory_dom() {
+		// TODO
+	}
 
+	//#########
+	//### UPDATE FUNCTIONS
+	//#########
 	toggle_active(target) {
 		let tp = target.parentElement.parentElement;
 
-		console.log(tp);
+		//console.log(tp);
 		if(tp.classList.contains(this.active_classname)) {
 			tp.classList.remove(this.active_classname);
 		}else {
 			tp.classList.add(this.active_classname);
 
-		console.log(tp);
+		//console.log(tp);
 		}
 		return;
 	}
 	update_attribute(task, target) {
+		// TODO
 		if(typeof(task) == 'string') {
 			if(task == 'increase') {
 				this.value = this.value + 1;
@@ -491,8 +502,77 @@ class CHARACTER {
 		}
 
 		this.button.innerHTML = value;
+
+		_save_item();
 	}
-}/*
+	update_skill(task, target) {
+		// TODO
+	}
+
+	//#########
+	//### SAVE FUNCTIONS
+	//#########
+	_save_item(item) {
+		// TODO
+	}
+	_save_full() {
+		// TODO
+	}
+}
+
+var _C = {};
+function setup_character() {
+	let _c = character_full;
+
+	_C = new CHARACTER(
+		_c.uid,
+		_c.base_name_main,
+		_c.base_name_nick,
+		_c.base_name_hidden,
+		_c.base_race,
+		_c.base_gender,
+		_c.base_age,
+		_c.base_height,
+		_c.base_weight,
+		_c.base_figure_id,
+		_c.base_origin,
+		_c.base_linage,
+		_c.base_language_ids,
+		_c.base_education,
+		_c.base_rank,
+		_c.base_reputation,
+		_c.base_karma,
+		_c.base_xp,
+		_c.base_level,
+		_c.attributes,
+		_c.skills_main,
+		_c.skills_fight,
+		_c.skills_magic,
+		_c.inventory,
+		_c.inventory_extension,
+		_c.money,
+		_c.extra_history,
+		_c.extra_notes,
+		_c.extra_informations,
+		_c.media,
+		active_item_settings_classname,
+		main_module
+	);
+	/*for (let i = 0; i < attribute_elements.length; i++) {
+		let type = attribute_elements[i].getAttribute('item');
+		
+		//attribute_element_list[type] = new ITEM_ATTRIBUTE(attribute_elements[i], active_item_settings_classname);
+		attribute_element_list[type] = new ATTRIBUTE(attribute_elements[i], active_item_settings_classname);
+		attribute_types.push(type);
+	}*/
+}
+
+
+//#########
+//### DEV VOID
+//#########
+
+/*
 class ATTRIBUTE extends CHARACTER {
 	constructor (parent, active_classname) {
 		
@@ -542,49 +622,3 @@ class ATTRIBUTE extends CHARACTER {
 		this.button.innerHTML = value;
 	}
 }*/
-var _C = {};
-function setup_character() {
-	let _c = character_full;
-
-	_C = new CHARACTER(
-		_c.uid,
-		_c.base_name_main,
-		_c.base_name_nick,
-		_c.base_name_hidden,
-		_c.base_race,
-		_c.base_gender,
-		_c.base_age,
-		_c.base_height,
-		_c.base_weight,
-		_c.base_figure_id,
-		_c.base_origin,
-		_c.base_linage,
-		_c.base_language_ids,
-		_c.base_education,
-		_c.base_rank,
-		_c.base_reputation,
-		_c.base_karma,
-		_c.base_xp,
-		_c.base_level,
-		_c.attributes,
-		_c.skills_main,
-		_c.skills_fight,
-		_c.skills_magic,
-		_c.inventory,
-		_c.inventory_extension,
-		_c.money,
-		_c.extra_history,
-		_c.extra_notes,
-		_c.extra_informations,
-		_c.media,
-		active_item_settings_classname,
-		main_module
-	);
-	/*for (let i = 0; i < attribute_elements.length; i++) {
-		let type = attribute_elements[i].getAttribute('item');
-		
-		//attribute_element_list[type] = new ITEM_ATTRIBUTE(attribute_elements[i], active_item_settings_classname);
-		attribute_element_list[type] = new ATTRIBUTE(attribute_elements[i], active_item_settings_classname);
-		attribute_types.push(type);
-	}*/
-}
