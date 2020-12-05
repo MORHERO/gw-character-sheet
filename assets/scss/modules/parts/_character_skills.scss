@@ -2,6 +2,7 @@
 	padding:0.5em;
 	[submodule='accordion'] {
 		[task='accordion_title'] p{
+			text-align: left;
 			font-size: $font-xs;
 		}
 	}
@@ -16,8 +17,33 @@
 		div {
 			flex-basis:50%;
 		}
-		button {font-size: $font-s;}
-		span {line-height: $font-m;}
+		input {
+			border: 1px solid $cl-grey;
+			background: none;
+			padding: 4px 0px 3px;
+			width: 2.5em;
+			text-align: center;
+			color:$cl-white;
+			font-size: $font-s;
+			margin-right: 2px;
+			/* Chrome, Safari, Edge, Opera */
+			&::-webkit-outer-spin-button,
+			&::-webkit-inner-spin-button {
+				-webkit-appearance: none;
+				margin: 0;
+			}
+			/* Firefox */
+			&[type=number] {
+				-moz-appearance: textfield;
+			}
+		}
+		button {
+			margin: 0px 2px;
+			font-size: $font-s;
+			margin-right: 2px;
+			font-family: monospace;
+		}
+		span {line-height: 32px;}
 
 	}
 }

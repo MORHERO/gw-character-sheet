@@ -8,9 +8,10 @@ xhttp.onreadystatechange = function() {
 		//console.log(this.responseText);
 		character_full = JSON.parse(this.responseText);
 		setup_character_data();
-		character_loaded();
 
 		setup_character();
+
+		character_loaded();
 		//return JSON.parse(this.responseText);
 	}
 };
@@ -101,8 +102,8 @@ class ACCORDION {
 		const that = this;
 
 		let title_elements = this.parent.querySelectorAll('[task=accordion_title]');
-
 		for (let i = 0; i < title_elements.length; ++i) {
+		
 			title_elements[i].addEventListener('click', function(e) {
 				that.open_element(this);
 			});
@@ -272,13 +273,25 @@ class CHARACTER {
 		});
 
 		for (let cat = 0; cat < this.skill.length; cat++) {
-			this.skill[cat].parent.addEventListener('click', function(e) {
-				if(e.target.getAttribute('task') == 'attribute-main' || e.target.getAttribute('task') == 'close') {console.log(1);
-					that.toggle_active(e.target);
-				}else if(e.target.getAttribute('task') == 'decrease' || e.target.getAttribute('task') == 'increase') {console.log(2);
-					that.update_attribute(e.target.getAttribute('task'), e.target);
-				}
-			});
+			let skills_settings = this.skill[cat].parent.querySelectorAll('[item=skill] button');
+			let skills_value = this.skill[cat].parent.querySelectorAll('[item=skill] input');
+			
+			for (let i = 0; i < skills_settings.length; i++) {
+				skills_settings[i].addEventListener('click', function(e) {
+					that.update_skill(e.target.getAttribute('task'), e.target);
+				});
+			}
+
+			for (let i = 0; i < skills_value.length; i++) {
+				skills_value[i].addEventListener('blur', function(e) {
+					that.update_skill(parseInt(e.target.value), e.target, );
+				});
+				skills_value[i].addEventListener('keypress', function(e) {
+					if(/[^0-9]/.exec(e.key)){
+						e.preventDefault();
+					}
+				});
+			}
 		}
 		console.log('char_setup done');
 	}
@@ -294,7 +307,6 @@ class CHARACTER {
 		
 		return;
 	}
-
 	_setup_attributes_dom() {
 		for (let _i = 0; _i < this._attributes.length; _i++) {
 			let attribute_list = this._attributes[_i];
@@ -387,7 +399,6 @@ class CHARACTER {
 		
 		for (let x = 0; x < this._skills.length; x++) {
 			for (let t = 0; t < this._skills[x].length; t++) {
-
 				let dom_element_list = [];
 
 				let dom_parent = document.createElement('div');
@@ -398,15 +409,33 @@ class CHARACTER {
 					dom_title_wrap.setAttribute('task', 'accordion_title');
 				
 				let dom_title = document.createElement('p');
-				
-				let dom_title_content = document.createTextNode(this._skills[x][t].category);
 
+				let dom_title_content = document.createTextNode(this._skills[x][t].category);
+				let dom_title_content_inner = document.createElement('span');
+				let dom_title_content_inner_sum = document.createTextNode(' (0)');
+				
 				// accordion content
 				let dom_content_wrap = document.createElement('div');
 					dom_content_wrap.setAttribute('task', 'accordion_content');
 
 				for (let i = 0; i < this._skills[x][t].data.length; i++) {
 					let skill = this._skills[x][t].data[i];
+
+					// dom skill setting decrease
+					let dom_skill_setting_decrease = document.createElement('button');
+						dom_skill_setting_decrease.setAttribute('task', 'decrease');
+						dom_skill_setting_decrease.classList.add('setting');
+						//dom_skill_setting_decrease.classList.add('pos-11');
+						dom_skill_setting_decrease.classList.add('btn-clean');
+						dom_skill_setting_decrease.innerHTML = "-";
+					// dom skill setting increase
+					let dom_skill_setting_increase = document.createElement('button');
+						dom_skill_setting_increase.setAttribute('task', 'increase');
+						dom_skill_setting_increase.classList.add('setting');
+						//dom_skill_setting_increase.classList.add('pos-1');
+						dom_skill_setting_increase.classList.add('btn-clean');
+						dom_skill_setting_increase.innerHTML = "+";
+
 					// accordion content
 					let dom_content_inner = document.createElement('div');
 						dom_content_inner.classList.add('flex');
@@ -421,15 +450,21 @@ class CHARACTER {
 
 					let dom_content_value_sep = document.createElement('div');
 
-					let dom_skill_value = document.createElement('button');
+					let dom_skill_value = document.createElement('input');
 						dom_skill_value.classList.add('btn-clean');
 						dom_skill_value.setAttribute('item', 'skill-value');
+						dom_skill_value.setAttribute('title', skill.title);
+						dom_skill_value.setAttribute('category', this.skill[x].category);
+						dom_skill_value.setAttribute('type', 'number');
+						dom_skill_value.value = skill.value;
 
-					let dom_skill_value_content = document.createTextNode(skill.value);
+					//let dom_skill_value_content = document.createTextNode(skill.value);
 
 					// accordion content
-					dom_skill_value.appendChild(dom_skill_value_content);
+					//dom_skill_value.appendChild(dom_skill_value_content);
 					dom_content_value_sep.appendChild(dom_skill_value);
+					dom_content_value_sep.appendChild(dom_skill_setting_decrease);
+					dom_content_value_sep.appendChild(dom_skill_setting_increase);
 
 					dom_skill_title.appendChild(dom_skill_title_content);
 					dom_content_title_sep.appendChild(dom_skill_title);
@@ -440,7 +475,10 @@ class CHARACTER {
 					dom_content_wrap.appendChild(dom_content_inner);
 
 					// accordion title
+
+					dom_title_content_inner.appendChild(dom_title_content_inner_sum);
 					dom_title.appendChild(dom_title_content);
+					dom_title.appendChild(dom_title_content_inner);
 					dom_title_wrap.appendChild(dom_title);
 
 					// dom full
@@ -454,9 +492,30 @@ class CHARACTER {
 				}
 			}
 		}
+		this._setup_skill_cat_point();
 	}
 	_setup_inventory_dom() {
 		// TODO
+	}
+
+	_setup_skill_cat_point() {
+		console.log('in');
+		var skill_titles = document.querySelectorAll('[submodule=skills] [task=accordion_title] span');
+		var skill_content = '';
+
+		for (let i = 0; i < skill_titles.length; i++) {
+			skill_content = skill_titles[i].parentElement.parentElement.parentElement.querySelectorAll('[item=skill] input');
+			
+			let sum = 0;
+			let amount = 0;
+			for (let s = 0; s < skill_content.length; s++) {
+				sum = sum + parseInt(skill_content[s].value);
+				amount = amount + 1;
+			}
+			console.log(skill_titles);
+			skill_titles[i].innerHTML = " (" + (sum / amount) + ")";
+		}
+		return;
 	}
 
 	//#########
@@ -502,7 +561,41 @@ class CHARACTER {
 		//this._save(this._attributes);
 	}
 	update_skill(task, target) {
-		// TODO
+		// TODO BUGFIX: ALL THE SAME NAMED SKILLS WILL BE SET THE SAME VALUE
+
+		var tp = target;
+		if(typeof(task) == 'string') {
+			tp = target.parentElement.children[0];
+		}
+
+		var category = tp.getAttribute('category');
+		console.log(category);
+
+		for (let t = 0; t < this._skills.length; t++) {
+			for (let cat = 0; cat < this._skills[t].length; cat++) {
+				let skill = this._skills[t][cat].data;
+				
+				for (let i = 0; i < this._skills[t][cat].data.length; i++) {
+					if( skill[i].title == tp.getAttribute('title') ) {
+						if(typeof(task) == 'string') {
+
+							if(task == 'increase') {
+								this._skills[t][cat].data[i].value = skill[i].value + 1;
+							}else if(task == 'decrease') {
+								this._skills[t][cat].data[i].value = skill[i].value - 1;
+							}
+
+						}else if(typeof(task) == 'number') {
+							this._skills[t][cat].data[i].value = task;
+						}
+						console.log(typeof(task));
+						tp.value = this._skills[t][cat].data[i].value;
+					}
+
+				}
+			}
+		}
+		this._save('skill')
 		return;
 	}
 
@@ -514,6 +607,8 @@ class CHARACTER {
 		var data = '';
 		if(cat == 'attribute') {
 			data = this._get_attribute_savedata();
+		}else if(cat == 'skill') {
+			data = this._get_skill_savedata();
 		}else{
 
 		}
@@ -537,7 +632,17 @@ class CHARACTER {
 
 		return data;
 	}
+	_get_skill_savedata() {
+		let content_main = JSON.stringify(this._skills[0]);
+		let content_fight = JSON.stringify(this._skills[1]);
+		let content_magic = JSON.stringify(this._skills[2]);
+		
+		let data = "skills_main = '"+ content_main +"',skills_fight = '"+ content_fight +"',skills_magic = '"+ content_magic +"'";
+
+		return data;
+	}
 	_get_full_character_data() {
+		//TODO
 		return;
 	}
 }
