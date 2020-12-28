@@ -52,11 +52,7 @@
 								</div>
 							</div>
 						</div>
-						<?php /*
-							include 'modules/parts/0_intro.php';
-							include 'modules/parts/1_base.php';
-							include 'modules/parts/2_attributes.php';
-						*/ ?>
+						<?php include 'modules/parts/overlays.php'; ?>
 					</div>
 
 				</div>
@@ -64,7 +60,6 @@
 			</div>
 		</div>
 	</main>
-	
 	<?php
 		include 'templates/footer.php';
 		include 'templates/scripts.php';

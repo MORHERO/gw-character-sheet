@@ -97,7 +97,6 @@ class ACCORDION {
 		return;
 	}
 
-
 	setup_user_buttons() {
 		const that = this;
 
@@ -255,45 +254,16 @@ class CHARACTER {
 				'parent':document.getElementById('skills_magic_content')
 			}
 		];
+		this.skill_overlay = this.main_parent.querySelector('.overlay[task=add_skill]');
+		this.skill_cat_overlay = this.main_parent.querySelector('.overlay[task=add_skill_cat]');
 
 		// Setup doms
 		this._setup_header_dom();
 		this._setup_attributes_dom();
 		this._setup_skills_dom();
 
-		const that = this;
-
 		// Setup onlicks
-		this.attribute.parent.addEventListener('click', function(e) {
-			if(e.target.getAttribute('task') == 'attribute-main' || e.target.getAttribute('task') == 'close') {console.log(1);
-				that.toggle_active(e.target);
-			}else if(e.target.getAttribute('task') == 'decrease' || e.target.getAttribute('task') == 'increase') {console.log(2);
-				that.update_attribute(e.target.getAttribute('task'), e.target);
-			}
-		});
-
-		for (let cat = 0; cat < this.skill.length; cat++) {
-			let skills_settings = this.skill[cat].parent.querySelectorAll('[item=skill] button');
-			let skills_value = this.skill[cat].parent.querySelectorAll('[item=skill] input');
-			
-			for (let i = 0; i < skills_settings.length; i++) {
-				skills_settings[i].addEventListener('click', function(e) {
-					that.update_skill(e.target.getAttribute('task'), e.target);
-				});
-			}
-
-			for (let i = 0; i < skills_value.length; i++) {
-				skills_value[i].addEventListener('blur', function(e) {
-					that.update_skill(parseInt(e.target.value), e.target, );
-				});
-				skills_value[i].addEventListener('keypress', function(e) {
-					if(/[^0-9]/.exec(e.key)){
-						e.preventDefault();
-					}
-				});
-			}
-		}
-		console.log('char_setup done');
+		this._setup_onclicks();
 	}
 
 	//#########
@@ -401,9 +371,13 @@ class CHARACTER {
 			for (let t = 0; t < this._skills[x].length; t++) {
 				let dom_element_list = [];
 
+				
 				let dom_parent = document.createElement('div');
 					dom_parent.classList.add('element');
-				
+					dom_parent.setAttribute('catID', '' + x + '-' + t );
+								
+				//dom_parent = this._create_skill_cat_dom(x, this._skills[x][t]);
+
 				// accordion title
 				let dom_title_wrap = document.createElement('div');
 					dom_title_wrap.setAttribute('task', 'accordion_title');
@@ -418,77 +392,53 @@ class CHARACTER {
 				let dom_content_wrap = document.createElement('div');
 					dom_content_wrap.setAttribute('task', 'accordion_content');
 
+				// accordion title
+				dom_title_content_inner.appendChild(dom_title_content_inner_sum);
+				dom_title.appendChild(dom_title_content);
+				dom_title.appendChild(dom_title_content_inner);
+				dom_title_wrap.appendChild(dom_title);
+
+				dom_parent.appendChild(dom_title_wrap);
+
 				for (let i = 0; i < this._skills[x][t].data.length; i++) {
 					let skill = this._skills[x][t].data[i];
-
-					// dom skill setting decrease
-					let dom_skill_setting_decrease = document.createElement('button');
-						dom_skill_setting_decrease.setAttribute('task', 'decrease');
-						dom_skill_setting_decrease.classList.add('setting');
-						//dom_skill_setting_decrease.classList.add('pos-11');
-						dom_skill_setting_decrease.classList.add('btn-clean');
-						dom_skill_setting_decrease.innerHTML = "-";
-					// dom skill setting increase
-					let dom_skill_setting_increase = document.createElement('button');
-						dom_skill_setting_increase.setAttribute('task', 'increase');
-						dom_skill_setting_increase.classList.add('setting');
-						//dom_skill_setting_increase.classList.add('pos-1');
-						dom_skill_setting_increase.classList.add('btn-clean');
-						dom_skill_setting_increase.innerHTML = "+";
-
-					// accordion content
-					let dom_content_inner = document.createElement('div');
-						dom_content_inner.classList.add('flex');
-						dom_content_inner.setAttribute('item', 'skill');
-
-					let dom_content_title_sep = document.createElement('div');
-
-					let dom_skill_title = document.createElement('span');
-						dom_skill_title.setAttribute('item', 'skill-title');
-
-					let dom_skill_title_content = document.createTextNode(skill.title);
-
-					let dom_content_value_sep = document.createElement('div');
-
-					let dom_skill_value = document.createElement('input');
-						dom_skill_value.classList.add('btn-clean');
-						dom_skill_value.setAttribute('item', 'skill-value');
-						dom_skill_value.setAttribute('title', skill.title);
-						dom_skill_value.setAttribute('category', this.skill[x].category);
-						dom_skill_value.setAttribute('type', 'number');
-						dom_skill_value.value = skill.value;
-
-					//let dom_skill_value_content = document.createTextNode(skill.value);
-
-					// accordion content
-					//dom_skill_value.appendChild(dom_skill_value_content);
-					dom_content_value_sep.appendChild(dom_skill_value);
-					dom_content_value_sep.appendChild(dom_skill_setting_decrease);
-					dom_content_value_sep.appendChild(dom_skill_setting_increase);
-
-					dom_skill_title.appendChild(dom_skill_title_content);
-					dom_content_title_sep.appendChild(dom_skill_title);
-
-					dom_content_inner.appendChild(dom_content_title_sep);
-					dom_content_inner.appendChild(dom_content_value_sep);
+					let dom_content_inner = this._create_skill_dom(skill, this.skill[x].category);
 
 					dom_content_wrap.appendChild(dom_content_inner);
-
-					// accordion title
-
-					dom_title_content_inner.appendChild(dom_title_content_inner_sum);
-					dom_title.appendChild(dom_title_content);
-					dom_title.appendChild(dom_title_content_inner);
-					dom_title_wrap.appendChild(dom_title);
-
-					// dom full
-					dom_parent.appendChild(dom_title_wrap);
-					dom_parent.appendChild(dom_content_wrap);
-
-					dom_element_list.push(dom_parent)
 				}
+
+				// ADD SKILL BUTTON
+				let dom_skill_add_wrap = document.createElement('div');
+					dom_skill_add_wrap.classList.add('flex');
+				let dom_skill_add_inner = document.createElement('button');
+					dom_skill_add_inner.setAttribute('task', 'skill-add');
+				let dom_skill_add_inner_content = document.createTextNode('+');
+
+				dom_skill_add_inner.appendChild(dom_skill_add_inner_content);
+				dom_skill_add_wrap.appendChild(dom_skill_add_inner);
+				dom_content_wrap.appendChild(dom_skill_add_wrap);
+
+
+
+				dom_parent.appendChild(dom_content_wrap);
+
+				dom_element_list.push(dom_parent);
+
 				for (let i = 0; i < dom_element_list.length; i++) {
 					this.skill[x].parent.appendChild(dom_element_list[i]);
+				}
+				
+				if(t == this._skills[x].length - 1) {
+					let dom_skill_add_wrap = document.createElement('div');
+						dom_skill_add_wrap.classList.add('flex');
+					let dom_skill_add_inner = document.createElement('button');
+						dom_skill_add_inner.setAttribute('task', 'skill-cat-add');
+					let dom_skill_add_inner_content = document.createTextNode('+');
+
+					dom_skill_add_inner.appendChild(dom_skill_add_inner_content);
+					dom_skill_add_wrap.appendChild(dom_skill_add_inner);
+
+					this.skill[x].parent.appendChild(dom_skill_add_wrap);
 				}
 			}
 		}
@@ -499,7 +449,6 @@ class CHARACTER {
 	}
 
 	_setup_skill_cat_point() {
-		console.log('in');
 		var skill_titles = document.querySelectorAll('[submodule=skills] [task=accordion_title] span');
 		var skill_content = '';
 
@@ -508,13 +457,213 @@ class CHARACTER {
 			
 			let sum = 0;
 			let amount = 0;
+
 			for (let s = 0; s < skill_content.length; s++) {
 				sum = sum + parseInt(skill_content[s].value);
 				amount = amount + 1;
 			}
-			console.log(skill_titles);
-			skill_titles[i].innerHTML = " (" + (sum / amount) + ")";
+			let result = Math.round(sum / amount);
+
+			if(isNaN(result)) {
+				result = 0;
+			}
+			skill_titles[i].innerHTML = " (" + result + ")";
 		}
+		return;
+	}
+
+	_create_skill_cat_dom(type_id, cat) {
+		let dom_parent = document.createElement('div');
+			dom_parent.classList.add('element');
+
+			dom_parent.setAttribute('catID', '' + type_id + '-' + (this._skills[type_id].length) );
+		
+		// accordion title
+		let dom_title_wrap = document.createElement('div');
+			dom_title_wrap.setAttribute('task', 'accordion_title');
+		
+		let dom_title = document.createElement('p');
+
+		let dom_title_content = document.createTextNode(cat.category);
+		let dom_title_content_inner = document.createElement('span');
+		let dom_title_content_inner_sum = document.createTextNode(' (0)');
+		
+		// accordion content
+		let dom_content_wrap = document.createElement('div');
+			dom_content_wrap.setAttribute('task', 'accordion_content');
+
+
+		// accordion title
+		dom_title_content_inner.appendChild(dom_title_content_inner_sum);
+		dom_title.appendChild(dom_title_content);
+		dom_title.appendChild(dom_title_content_inner);
+		dom_title_wrap.appendChild(dom_title);
+
+		// dom full
+		dom_parent.appendChild(dom_title_wrap);
+		dom_parent.appendChild(dom_content_wrap);
+
+		return dom_parent;
+	}
+
+	_create_skill_dom(skill, category) {
+		// dom skill setting decrease
+		let dom_skill_setting_decrease = document.createElement('button');
+			dom_skill_setting_decrease.setAttribute('task', 'decrease');
+			dom_skill_setting_decrease.classList.add('setting');
+			//dom_skill_setting_decrease.classList.add('pos-11');
+			dom_skill_setting_decrease.classList.add('btn-clean');
+			dom_skill_setting_decrease.innerHTML = "-";
+		// dom skill setting increase
+		let dom_skill_setting_increase = document.createElement('button');
+			dom_skill_setting_increase.setAttribute('task', 'increase');
+			dom_skill_setting_increase.classList.add('setting');
+			//dom_skill_setting_increase.classList.add('pos-1');
+			dom_skill_setting_increase.classList.add('btn-clean');
+			dom_skill_setting_increase.innerHTML = "+";
+
+		// accordion content
+		let dom_content_inner = document.createElement('div');
+			dom_content_inner.classList.add('flex');
+			dom_content_inner.setAttribute('item', 'skill');
+
+		let dom_content_title_sep = document.createElement('div');
+
+		let dom_skill_title = document.createElement('span');
+			dom_skill_title.setAttribute('item', 'skill-title');
+
+		let dom_skill_title_content = document.createTextNode(skill.title);
+
+		let dom_content_value_sep = document.createElement('div');
+
+		let dom_skill_value = document.createElement('input');
+			dom_skill_value.classList.add('btn-clean');
+			dom_skill_value.setAttribute('item', 'skill-value');
+			dom_skill_value.setAttribute('title', skill.title);
+			dom_skill_value.setAttribute('category', category);
+			dom_skill_value.setAttribute('type', 'number');
+			dom_skill_value.value = skill.value;
+
+		// accordion content
+		//dom_skill_value.appendChild(dom_skill_value_content);
+		dom_content_value_sep.appendChild(dom_skill_value);
+		dom_content_value_sep.appendChild(dom_skill_setting_decrease);
+		dom_content_value_sep.appendChild(dom_skill_setting_increase);
+
+		dom_skill_title.appendChild(dom_skill_title_content);
+		dom_content_title_sep.appendChild(dom_skill_title);
+
+		dom_content_inner.appendChild(dom_content_title_sep);
+		dom_content_inner.appendChild(dom_content_value_sep);
+
+		return dom_content_inner;
+	}
+
+	//#########
+	//### SETUP ONCLICKS FUNCTIONS
+	//#########
+	_setup_onclicks() {
+		const that = this;
+		this._setup_onclick_attributes(that);
+		this._setup_onclick_skills(that);
+		this._setup_onclick_overlays(that);
+	}
+
+	_setup_onclick_attributes(that) {
+		this.attribute.parent.addEventListener('click', function(e) {
+			if(e.target.getAttribute('task') == 'attribute-main' || e.target.getAttribute('task') == 'close') {
+				that.toggle_active(e.target);
+			}else if(e.target.getAttribute('task') == 'decrease' || e.target.getAttribute('task') == 'increase') {
+				that.update_attribute(e.target.getAttribute('task'), e.target);
+			}
+		});
+		return;
+	}
+	_setup_onclick_skills(that) {
+		for (let cat = 0; cat < this.skill.length; cat++) {
+			let skills_settings = this.skill[cat].parent.querySelectorAll('[item=skill] button');
+			let skills_value = this.skill[cat].parent.querySelectorAll('[item=skill] input');
+			let skill_add = this.skill[cat].parent.querySelectorAll('[task=skill-add]');
+
+			for (let i = 0; i < skills_settings.length; i++) {
+				skills_settings[i].addEventListener('click', function(e) {
+					that.update_skill(e.target.getAttribute('task'), e.target);
+				});
+			}
+
+			for (let i = 0; i < skills_value.length; i++) {
+				skills_value[i].addEventListener('blur', function(e) {
+					that.update_skill(parseInt(e.target.value), e.target, );
+				});
+				skills_value[i].addEventListener('keypress', function(e) {
+					if(/[^0-9]/.exec(e.key)){
+						e.preventDefault();
+					}
+				});
+			}
+
+			for (let i = 0; i < skill_add.length; i++) {
+				skill_add[i].addEventListener('click', function(e) {
+					let cat_parent = e.target.parentElement.parentElement.parentElement;
+					let skill_add_save = that.main_parent.querySelector('button[task=save_new_skill]');
+					
+					that.skill_overlay.classList.add('active');
+					skill_add_save.setAttribute('catid', cat_parent.getAttribute('catid'));
+				});
+			}
+		}
+
+		return;
+	}
+
+	_setup_onclick_overlays(that) {
+		
+		// SKILL ADD
+		let skill_add_save = this.main_parent.querySelector('button[task=save_new_skill]');
+
+		skill_add_save.addEventListener('click', function(e) {
+			let catid = skill_add_save.getAttribute('catid');
+			let skill_title = that.skill_overlay.querySelector('[name=skill_title]');
+			let skill_value = that.skill_overlay.querySelector('[name=skill_value]');
+
+			that._add_skill(catid, skill_title, skill_value);
+		});
+
+		// SKILL CATEGORY ADD
+		let skill_cat_add = that.main_parent.querySelectorAll('[task=skill-cat-add]');
+		let skill_cat_add_save = this.main_parent.querySelector('button[task=save_new_skill_cat]');
+		for (let i = 0; i < skill_cat_add.length; i++) {
+			skill_cat_add[i].addEventListener('click', function(e) {
+				let parent = e.target.parentElement.parentElement;
+				
+				that.skill_cat_overlay.classList.add('active');
+				skill_cat_add_save.setAttribute('typeid', parent.getAttribute('id'));
+			});
+		}
+		skill_cat_add_save.addEventListener('click', function(e) {
+			let skill_cat_title = that.skill_cat_overlay.querySelector('[name=skill_cat_title]');
+			let type_id = skill_cat_add_save.getAttribute('typeid');
+
+			that._add_skill_cat(type_id, skill_cat_title.value);
+		});
+
+		/*document.addEventListener('keypress', function(e) {
+			console.log(e);
+			if(that.skill_overlay.classList.contains('active')) {
+				that.skill_overlay.classList.remove('active');
+			}
+		});*/
+
+		let overlays = that.main_parent.querySelectorAll('.overlay');
+		for (let i = 0; i < overlays.length; i++) {
+			overlays[i].addEventListener('click', function(e) {
+
+				if(e.target.classList.contains('active')) {
+					e.target.classList.remove('active');
+				}
+			});
+		}
+
 		return;
 	}
 
@@ -569,7 +718,6 @@ class CHARACTER {
 		}
 
 		var category = tp.getAttribute('category');
-		console.log(category);
 
 		for (let t = 0; t < this._skills.length; t++) {
 			for (let cat = 0; cat < this._skills[t].length; cat++) {
@@ -588,7 +736,6 @@ class CHARACTER {
 						}else if(typeof(task) == 'number') {
 							this._skills[t][cat].data[i].value = task;
 						}
-						console.log(typeof(task));
 						tp.value = this._skills[t][cat].data[i].value;
 					}
 
@@ -598,6 +745,57 @@ class CHARACTER {
 		this._save('skill')
 		return;
 	}
+
+	//#########
+	//### ADD FUNCTIONS
+	//#########
+
+	_add_skill_cat(typeid, title) {
+		let cat_obj = {'category':title, 'data':[]};
+		let type_id = '';
+		if(typeid == 'skills_content') {
+			type_id = 0;
+		}else if(typeid == 'skills_fight_content') {
+			type_id = 1;
+		}else if(typeid == 'skills_magic_content') {
+			type_id = 2;
+		}
+
+		this._skills[type_id].push(cat_obj);
+
+		let content_dom = this.skill[type_id].parent;
+
+		let new_skill_cat_dom = this._create_skill_cat_dom(type_id, cat_obj);
+
+		content_dom.insertBefore(new_skill_cat_dom, content_dom.lastChild);
+
+		this._save('skill');
+
+		return;
+	}
+	_add_skill(catid, title, value) {
+		let type_id = parseInt(catid.substr(0, catid.indexOf('-')));
+		let cat_id = parseInt(catid.substr(catid.indexOf('-') + 1));
+
+		let skill_obj = {'title':title.value,'value':parseInt(value.value)};
+
+		this._skills[type_id][cat_id].data.push(skill_obj);
+		
+		let cat_dom = this.main_parent.querySelector('[catid="' + catid + '"]');
+		let content_dom = cat_dom.querySelector('[task=accordion_content]');
+
+		let new_skill_dom = this._create_skill_dom(skill_obj);
+
+		content_dom.insertBefore(new_skill_dom, content_dom.lastChild);
+
+		this._save('skill');
+
+		return;
+	}
+	_remove_skill() {
+
+	}
+
 
 	//#########
 	//### SAVE FUNCTIONS
@@ -685,221 +883,4 @@ function setup_character() {
 		active_item_settings_classname,
 		main_module
 	);
-	/*for (let i = 0; i < attribute_elements.length; i++) {
-		let type = attribute_elements[i].getAttribute('item');
-		
-		//attribute_element_list[type] = new ITEM_ATTRIBUTE(attribute_elements[i], active_item_settings_classname);
-		attribute_element_list[type] = new ATTRIBUTE(attribute_elements[i], active_item_settings_classname);
-		attribute_types.push(type);
-	}*/
 }
-
-
-//#########
-//### DEV VOID
-//#########
-
-/*
-class ATTRIBUTE extends CHARACTER {
-	constructor (parent, active_classname) {
-		
-		const that = this;
-
-		this.button.addEventListener('click', function() {
-			that.toggle_active();
-		});
-
-		for (let i = 0; i < this.settings.length; i++) {
-			this.settings[i].addEventListener('click', function() {
-				let task = this.getAttribute('task');
-				if(task == 'increase' || task == 'decrease') {
-					that.mod_value(task);
-				}else if(task == 'close') {
-					that.toggle_active();
-				}
-			})
-		}
-
-		this.update_attribute();
-	}
-	toggle_active() {
-		console.log(character_full);
-		
-		if(this.active) {
-			this.parent.classList.remove(this.active_classname);
-			this.active = false;
-		}else {
-			this.parent.classList.add(this.active_classname);
-			this.active = true;
-		}
-	}
-	mod_value(task) {
-		if(typeof(task) == 'string') {
-			if(task == 'increase') {
-				this.value = this.value + 1;
-			}else if(task == 'decrease') {
-				this.value = this.value - 1;
-			}
-		}else if(typeof(task) == 'number') {
-			this.value = task;
-		}
-		this.update();
-	}
-	update(value=this.value) {
-		this.button.innerHTML = value;
-	}
-}*/
-
-// HEADER MODULE
-/*function setup_header_content() {
-	let name_main_element = main_module.querySelector('[item=base_name_main]');
-	let name_nick_element = main_module.querySelector('[item=base_name_nick]');
-	let gender_element = main_module.querySelector('[item=base_gender]');
-	let race_element = main_module.querySelector('[item=base_race]');
-
-	name_main_element.innerHTML = character_full['base_name_main'];
-	name_nick_element.innerHTML = character_full['base_name_nick'];
-	gender_element.innerHTML = character_full['base_gender'];
-	race_element.innerHTML = character_full['base_race_id'];
-}*/
-
-// ATTRIBUTE MODULE
-/*
-class ITEM_ATTRIBUTE {
-	constructor (parent, active_classname) {
-		this.parent = parent;
-		this.button = this.parent.querySelector('button');
-		this.settings = this.parent.querySelectorAll('.setting');
-		this.value = parseInt(this.button.innerHTML);
-		this.active = false;
-		this.active_classname = active_classname;
-
-		const that = this;
-
-		this.button.addEventListener('click', function() {
-			that.toggle_active();
-		});
-
-		for (let i = 0; i < this.settings.length; i++) {
-			this.settings[i].addEventListener('click', function() {
-				let task = this.getAttribute('task');
-				if(task == 'increase' || task == 'decrease') {
-					that.mod_value(task);
-				}else if(task == 'close') {
-					that.toggle_active();
-				}
-			})
-		}
-
-		this.update_attribute();
-	}
-	toggle_active() {
-		console.log(character_full);
-		
-		if(this.active) {
-			this.parent.classList.remove(this.active_classname);
-			this.active = false;
-		}else {
-			this.parent.classList.add(this.active_classname);
-			this.active = true;
-		}
-	}
-	mod_value(task) {
-		if(typeof(task) == 'string') {
-			if(task == 'increase') {
-				this.value = this.value + 1;
-			}else if(task == 'decrease') {
-				this.value = this.value - 1;
-			}
-		}else if(typeof(task) == 'number') {
-			this.value = task;
-		}
-		this.update_attribute();
-	}
-	update_attribute(value=this.value) {
-		this.button.innerHTML = value;
-	}
-}
-
-
-
-// SKILL MODULE
-class ITEM_SKILLS{
-	constructor(parent, data) {
-		this.parent = parent;
-		this.category = data.category;
-		this.skills = data.data;
-
-		this.dom_base = {};
-
-		this.create_content_dom();
-	}
-
-	create_content_dom() {
-		let dom_element_list = [];
-
-		let dom_parent = document.createElement('div');
-			dom_parent.classList.add('element');
-		
-		// accordion title
-		let dom_title_wrap = document.createElement('div');
-			dom_title_wrap.setAttribute('task', 'accordion_title');
-		
-		let dom_title = document.createElement('p');
-		
-		let dom_title_content = document.createTextNode(this.category);
-
-		// accordion content
-		let dom_content_wrap = document.createElement('div');
-			dom_content_wrap.setAttribute('task', 'accordion_content');
-
-		for (let i = 0; i < this.skills.length; i++) {
-			// accordion content
-			let dom_content_inner = document.createElement('div');
-				dom_content_inner.classList.add('flex');
-				dom_content_inner.setAttribute('item', 'skill');
-
-			let dom_content_title_sep = document.createElement('div');
-
-			let dom_skill_title = document.createElement('span');
-				dom_skill_title.setAttribute('item', 'skill-title');
-
-			let dom_skill_title_content = document.createTextNode(this.skills[i].title);
-
-			let dom_content_value_sep = document.createElement('div');
-
-			let dom_skill_value = document.createElement('button');
-				dom_skill_value.classList.add('btn-clean');
-				dom_skill_value.setAttribute('item', 'skill-value');
-
-			let dom_skill_value_content = document.createTextNode(this.skills[i].value);
-
-			// accordion content
-			dom_skill_value.appendChild(dom_skill_value_content);
-			dom_content_value_sep.appendChild(dom_skill_value);
-
-			dom_skill_title.appendChild(dom_skill_title_content);
-			dom_content_title_sep.appendChild(dom_skill_title);
-
-			dom_content_inner.appendChild(dom_content_title_sep);
-			dom_content_inner.appendChild(dom_content_value_sep);
-
-			dom_content_wrap.appendChild(dom_content_inner);
-
-			// accordion title
-			dom_title.appendChild(dom_title_content);
-			dom_title_wrap.appendChild(dom_title);
-
-			// dom full
-			dom_parent.appendChild(dom_title_wrap);
-			dom_parent.appendChild(dom_content_wrap);
-
-			dom_element_list.push(dom_parent)
-		}
-
-		for (let i = 0; i < dom_element_list.length; i++) {
-			this.parent.appendChild(dom_element_list[i]);
-		}
-	}
-}
-*/

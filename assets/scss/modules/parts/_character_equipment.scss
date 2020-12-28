@@ -1,13 +1,42 @@
 [submodule='equipment'] {
 	>.flex {
 		.main {
-			flex-basis: 70%;
+			flex-basis: 75%;
 			padding: 0.5em;
 		}
 		.sub {
-			flex-basis: 30%;
+			flex-basis: 25%;
 			padding: 0.5em;
 		}
 	}
+	#money_content {
+		>.flex {
+			justify-content: space-between;
+			>div {
+				flex-basis: 50%;
+			}
+			p {
+				margin:0;
+			}
+		}
+		.group {
+			padding: 0.5em 0.5em;
+			border: 1px solid $cl-grey;
+			
+			[item=money_amount] {
+				text-align: right;
+			}
+			span {
+				font-size: 0.6em;
+			}
 
+			input {
+				width: calc(100% - 3em);
+				text-align: right;
+				border: none;
+				padding-right: 2px;
+			}
+		}
+
+	}
 }

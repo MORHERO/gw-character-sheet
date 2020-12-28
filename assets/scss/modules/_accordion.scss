@@ -2,6 +2,9 @@
 	margin-bottom: 30px;
 	> .flex {
 		flex-direction: column;
+		[task=skill-cat-add] {
+			width: 100%;
+		}
 	}
 
 	.element {
@@ -9,26 +12,49 @@
 	}
 
 	[task=accordion_title] {
-		font-size: $font-m;
 		font-weight: bold;
-		padding: 8px 18px;
+		padding: 8px 0px;
 		background-color: $cl-main-black;
 		cursor: pointer;
 		p {
-			margin: 0;
-			text-align: center;
+			margin: 0px 18px;
+			font-size: $font-xs;
 		}
 
 		&:hover {
-			background-color: $cl-main-black-60;
+			background-color: $cl-main-black-80;
 		}
 	}
 
 	[task=accordion_content] {
 		height: 0px;
 		overflow: hidden;
+		background-color: $cl-main-black-60;
+		button[task=skill-add] {
+			background-color: $cl-main;
+			&:hover {
+				background-color: $cl-main-black-60;
+			}
+			&:active {
+				background-color: $cl-main-black-80;
+			}
+		}
 		&.active {
 			height: auto;
+		}
+	}
+	&.clean {
+		[task=accordion_title] {
+			background: none;
+			p {
+				margin: 0px 0px;
+				font-size: $font-s;
+			}
+
+			&:hover {
+				text-decoration: underline;
+				color: $cl-grey;
+			}
 		}
 	}
 }
