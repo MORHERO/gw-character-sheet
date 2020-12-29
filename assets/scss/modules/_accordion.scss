@@ -1,6 +1,7 @@
 [submodule=accordion] {
 	margin-bottom: 30px;
 	> .flex {
+		flex-wrap:nowrap;
 		flex-direction: column;
 		[task=skill-cat-add] {
 			width: 100%;
@@ -54,6 +55,50 @@
 			&:hover {
 				text-decoration: underline;
 				color: $cl-grey;
+			}
+		}
+	}
+	
+}
+
+[submodule=accordion_inner] {
+	&[sub_acc=true] {
+		margin-bottom: 0px;
+		>.flex {
+			margin:0!important;
+			flex-direction: column;
+			flex-wrap:nowrap;
+			[task=skill-cat-add] {
+				width: 100%;
+			}
+		}
+		[task=accordion_title] {
+			background-color: $cl-main-black-40;
+			> .flex[item=skill] {
+				padding: 0em 1em;
+				margin:0;
+			}
+
+			font-weight: bold;
+			padding: 8px 0px;
+			background-color: $cl-main-black;
+			cursor: pointer;
+			p {
+				margin: 0px 18px;
+				font-size: $font-xs;
+			}
+
+			&:hover {
+				background-color: $cl-main-black-80;
+			}
+		}
+		[task=accordion_content] {
+			>.flex {
+				justify-content: flex-start;
+			}
+			.element {
+				flex-basis: calc(50% - 2em);
+				margin-left: 1em;
 			}
 		}
 	}

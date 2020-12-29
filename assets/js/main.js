@@ -76,38 +76,69 @@ class ACCORDION {
 		this.elements = parent.querySelectorAll('.element');
 		this.active_element = "";
 
-		this.setup_user_buttons();
+		this.accordions_inner = this.parent.querySelectorAll('[submodule=accordion_inner]');
+
+		this._setup_user_buttons();
+		if (this.accordions_inner) {
+			this._setup_inner_accordions();
+		}
 	}
 
-	open_element(elem) {
-		if(this.active_element == elem.nextElementSibling) {
-			this.close_element();
-		}else {
-			if(this.active_element != "") {this.close_element();}
+	open_element(elem, inner=false) {
+		
+		if(elem.nextElementSibling.classList.contains('active')) {
+			this.close_element(elem.nextElementSibling);
+		}else if (!inner) {
+			if(this.active_element != "") {this.close_element(elem.nextElementSibling, true);}
+
 			elem.nextElementSibling.classList.add('active');
 			this.active_element = elem.nextElementSibling;
+		} else {
+			elem.nextElementSibling.classList.add('active');
+		}
+		
+		return;
+	}
+
+	close_element(elem, parent_acc = false) {
+		elem.classList.remove('active');
+
+		if(parent_acc) {
+			let active_elements = this.parent.querySelectorAll('[task=accordion_content].active');
+
+			for (let i = 0; i < active_elements.length; i++) {
+				active_elements[i].classList.remove('active');
+			}
 		}
 
 		return;
 	}
 
-	close_element() {
-		this.active_element.classList.remove('active');
-		this.active_element = "";
-		return;
-	}
-
-	setup_user_buttons() {
+	_setup_user_buttons() {
 		const that = this;
 
-		let title_elements = this.parent.querySelectorAll('[task=accordion_title]');
-		for (let i = 0; i < title_elements.length; ++i) {
+		let title_elements = this.parent.querySelectorAll('[task=accordion_title]:not(.sub-title)');
+		for (let i = 0; i < title_elements.length; i++) {
 		
 			title_elements[i].addEventListener('click', function(e) {
 				that.open_element(this);
 			});
 		}
 		return;
+	}
+
+	_setup_inner_accordions() {
+		const that = this;
+		for (let i = 0; i < this.accordions_inner.length; i++) {
+			let title_elements = this.accordions_inner[i].querySelectorAll('[task=accordion_title].sub-title');
+
+			for (let i = 0; i < title_elements.length; i++) {
+				title_elements[i].addEventListener('click', function(e) {
+					that.open_element(this, true);
+				});
+			}
+
+		}
 	}
 }
 
@@ -381,6 +412,7 @@ class CHARACTER {
 				// accordion title
 				let dom_title_wrap = document.createElement('div');
 					dom_title_wrap.setAttribute('task', 'accordion_title');
+					dom_title_wrap.classList.add('main-title');
 				
 				let dom_title = document.createElement('p');
 
@@ -449,7 +481,7 @@ class CHARACTER {
 	}
 
 	_setup_skill_cat_point() {
-		var skill_titles = document.querySelectorAll('[submodule=skills] [task=accordion_title] span');
+		var skill_titles = document.querySelectorAll('[submodule=skills] [task=accordion_title].main-title span');
 		var skill_content = '';
 
 		for (let i = 0; i < skill_titles.length; i++) {
@@ -507,35 +539,44 @@ class CHARACTER {
 	}
 
 	_create_skill_dom(skill, category) {
-		// dom skill setting decrease
+		let return_dom = {};
+
+	// START SKILL SETTINGS DECLARATION
+		// <button task="decrease" class="setting btn-clean">-</button>
 		let dom_skill_setting_decrease = document.createElement('button');
 			dom_skill_setting_decrease.setAttribute('task', 'decrease');
 			dom_skill_setting_decrease.classList.add('setting');
-			//dom_skill_setting_decrease.classList.add('pos-11');
 			dom_skill_setting_decrease.classList.add('btn-clean');
 			dom_skill_setting_decrease.innerHTML = "-";
-		// dom skill setting increase
+		// <button task="increase" class="setting btn-clean">+</button>
 		let dom_skill_setting_increase = document.createElement('button');
 			dom_skill_setting_increase.setAttribute('task', 'increase');
 			dom_skill_setting_increase.classList.add('setting');
-			//dom_skill_setting_increase.classList.add('pos-1');
 			dom_skill_setting_increase.classList.add('btn-clean');
 			dom_skill_setting_increase.innerHTML = "+";
+	// END SKILL SETTINGS DECLARATION
 
-		// accordion content
+// START ACCORDION DECLARATION
+		// <div class="flex" item="skill">
 		let dom_content_inner = document.createElement('div');
 			dom_content_inner.classList.add('flex');
 			dom_content_inner.setAttribute('item', 'skill');
-
+		
+	// START ACCORDION TITLE
+		// <div>
 		let dom_content_title_sep = document.createElement('div');
-
+		// <span item="skill-title">SKILL-TITLE</span>
 		let dom_skill_title = document.createElement('span');
 			dom_skill_title.setAttribute('item', 'skill-title');
-
 		let dom_skill_title_content = document.createTextNode(skill.title);
+		dom_skill_title.appendChild(dom_skill_title_content);
+		dom_content_title_sep.appendChild(dom_skill_title);
+	// END ACCORDION TITLE
 
+	// START ACCORDION CONTENT
+		// <div>
 		let dom_content_value_sep = document.createElement('div');
-
+		// <input class="btn-clean" item="skill-value" title="SKILL-TITLE" category="CATEGORY" type="number" value="SKILL-VALUE"/>
 		let dom_skill_value = document.createElement('input');
 			dom_skill_value.classList.add('btn-clean');
 			dom_skill_value.setAttribute('item', 'skill-value');
@@ -544,19 +585,94 @@ class CHARACTER {
 			dom_skill_value.setAttribute('type', 'number');
 			dom_skill_value.value = skill.value;
 
-		// accordion content
-		//dom_skill_value.appendChild(dom_skill_value_content);
 		dom_content_value_sep.appendChild(dom_skill_value);
 		dom_content_value_sep.appendChild(dom_skill_setting_decrease);
 		dom_content_value_sep.appendChild(dom_skill_setting_increase);
+	// END ACCORDION CONTENT
 
-		dom_skill_title.appendChild(dom_skill_title_content);
-		dom_content_title_sep.appendChild(dom_skill_title);
-
+	// START ACCORDION
 		dom_content_inner.appendChild(dom_content_title_sep);
 		dom_content_inner.appendChild(dom_content_value_sep);
+	// END ACCORDION
+// END ACCORDION DECLARATION
 
-		return dom_content_inner;
+		return_dom = dom_content_inner;
+
+		if(category == 'magic') {
+		// START MAGIC ACCORDION DECLARATION
+			// <div submodule="accordion_inner" sub_acc=true>
+			let inner_acc = document.createElement('div');
+				inner_acc.setAttribute('submodule', 'accordion_inner');
+				inner_acc.setAttribute('sub_acc', true);
+			// <div class="flex">
+			let inner_acc_main = document.createElement('div');
+				inner_acc_main.classList.add('flex');
+			// <div class="element">
+			let inner_acc_element = document.createElement('div');
+				inner_acc_element.classList.add('element');
+			// <div task="accordion_title" class="sub-title">
+			let inner_acc_title = document.createElement('div');
+				inner_acc_title.setAttribute('task', 'accordion_title');
+				inner_acc_title.classList.add('sub-title');
+			// <div task="accordion_content">
+			let inner_acc_content = document.createElement('div');
+				inner_acc_content.setAttribute('task', 'accordion_content');
+		// END MAGIC ACCORDION DECLARATION
+
+		//START MAGIC CONTENT
+			// <div class="flex">
+			let m_content = document.createElement('div');
+				m_content.classList.add('flex');
+			
+			//START MAGIC DESCRIPTION
+			// <div class="element">
+			let m_content_element = document.createElement('div');
+				m_content_element.classList.add('element');
+			// <div class="wrap">
+			let m_content_wrap = document.createElement('div');
+				m_content_wrap.classList.add('wrap');
+			// <input type="text" name="magic_description"/>
+			let m_content_description = document.createElement('textarea');
+				m_content_description.setAttribute('name', 'magic_description');
+
+			m_content_wrap.appendChild(m_content_description);
+			m_content_element.appendChild(m_content_wrap);
+			//END MAGIC DESCRIPTION
+
+			// START MAGIC PLACEHOLDER
+			// <div class="element">
+			let m_content_element2 = document.createElement('div');
+				m_content_element2.classList.add('element');
+			// <div class="wrap">
+			let m_content_wrap2 = document.createElement('div');
+				m_content_wrap2.classList.add('wrap');
+
+			m_content_element2.appendChild(m_content_wrap2);
+			//END MAGIC PLACEHOLDER
+
+			m_content.appendChild(m_content_element)
+			m_content.appendChild(m_content_element2)
+
+			inner_acc_content.appendChild(m_content);
+		// END MAGIC CONTENT
+
+		// START MAGIC ACCORDION
+			inner_acc_title.appendChild(dom_content_inner);
+
+			inner_acc_element.appendChild(inner_acc_title);
+			inner_acc_element.appendChild(inner_acc_content);
+
+			inner_acc_main.appendChild(inner_acc_element);
+
+			inner_acc.appendChild(inner_acc_main);
+		// END MAGIC ACCORDION
+
+			// overwrite default content dom
+			return_dom = inner_acc;
+		}
+
+
+		return return_dom;
 	}
 
 	//#########

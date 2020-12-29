@@ -34,6 +34,7 @@ main {
 
 .flex {
 	display: flex;
+	flex-wrap: wrap;
 	.size {
 		&-xs {
 			flex-basis:10%;
@@ -137,7 +138,18 @@ input {
 		-moz-appearance: textfield;
 	}
 }
+textarea {
+	background:none;
+	color:$cl-font;
+	font-size: $font-s;
+	min-width: calc(100% - 4px);
+}
 
+[module=character-sheet] {
+	>.flex {
+		flex-wrap: nowrap;
+	}
+}
 
 
 
