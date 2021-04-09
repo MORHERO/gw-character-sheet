@@ -541,7 +541,7 @@ class CHARACTER {
 	_create_skill_dom(skill, category) {
 		let return_dom = {};
 
-	// START SKILL SETTINGS DECLARATION
+		// START SKILL SETTINGS DECLARATION
 		// <button task="decrease" class="setting btn-clean">-</button>
 		let dom_skill_setting_decrease = document.createElement('button');
 			dom_skill_setting_decrease.setAttribute('task', 'decrease');
@@ -554,15 +554,15 @@ class CHARACTER {
 			dom_skill_setting_increase.classList.add('setting');
 			dom_skill_setting_increase.classList.add('btn-clean');
 			dom_skill_setting_increase.innerHTML = "+";
-	// END SKILL SETTINGS DECLARATION
+		// END SKILL SETTINGS DECLARATION
 
-// START ACCORDION DECLARATION
+		// START ACCORDION DECLARATION
 		// <div class="flex" item="skill">
 		let dom_content_inner = document.createElement('div');
 			dom_content_inner.classList.add('flex');
 			dom_content_inner.setAttribute('item', 'skill');
 		
-	// START ACCORDION TITLE
+		// START ACCORDION TITLE
 		// <div>
 		let dom_content_title_sep = document.createElement('div');
 		// <span item="skill-title">SKILL-TITLE</span>
@@ -571,9 +571,9 @@ class CHARACTER {
 		let dom_skill_title_content = document.createTextNode(skill.title);
 		dom_skill_title.appendChild(dom_skill_title_content);
 		dom_content_title_sep.appendChild(dom_skill_title);
-	// END ACCORDION TITLE
+		// END ACCORDION TITLE
 
-	// START ACCORDION CONTENT
+		// START ACCORDION CONTENT
 		// <div>
 		let dom_content_value_sep = document.createElement('div');
 		// <input class="btn-clean" item="skill-value" title="SKILL-TITLE" category="CATEGORY" type="number" value="SKILL-VALUE"/>
@@ -588,18 +588,18 @@ class CHARACTER {
 		dom_content_value_sep.appendChild(dom_skill_value);
 		dom_content_value_sep.appendChild(dom_skill_setting_decrease);
 		dom_content_value_sep.appendChild(dom_skill_setting_increase);
-	// END ACCORDION CONTENT
+		// END ACCORDION CONTENT
 
-	// START ACCORDION
+		// START ACCORDION
 		dom_content_inner.appendChild(dom_content_title_sep);
 		dom_content_inner.appendChild(dom_content_value_sep);
-	// END ACCORDION
-// END ACCORDION DECLARATION
+		// END ACCORDION
+		// END ACCORDION DECLARATION
 
 		return_dom = dom_content_inner;
 
 		if(category == 'magic') {
-		// START MAGIC ACCORDION DECLARATION
+			// START MAGIC ACCORDION DECLARATION
 			// <div submodule="accordion_inner" sub_acc=true>
 			let inner_acc = document.createElement('div');
 				inner_acc.setAttribute('submodule', 'accordion_inner');
@@ -617,9 +617,9 @@ class CHARACTER {
 			// <div task="accordion_content">
 			let inner_acc_content = document.createElement('div');
 				inner_acc_content.setAttribute('task', 'accordion_content');
-		// END MAGIC ACCORDION DECLARATION
+			// END MAGIC ACCORDION DECLARATION
 
-		//START MAGIC CONTENT
+			//START MAGIC CONTENT
 			// <div class="flex">
 			let m_content = document.createElement('div');
 				m_content.classList.add('flex');
@@ -639,24 +639,51 @@ class CHARACTER {
 			m_content_element.appendChild(m_content_wrap);
 			//END MAGIC DESCRIPTION
 
-			// START MAGIC PLACEHOLDER
+			// START MAGIC VALUES
 			// <div class="element">
 			let m_content_element2 = document.createElement('div');
 				m_content_element2.classList.add('element');
-			// <div class="wrap">
+			// <div class="flex">
 			let m_content_wrap2 = document.createElement('div');
-				m_content_wrap2.classList.add('wrap');
+				m_content_wrap2.classList.add('flex');
+			
+			// <div class="inner" task="magic-values">
+			let m_content_inner1 = document.createElement('div');
+				m_content_inner1.classList.add('inner');
+				m_content_inner1.setAttribute('task', 'magic-values');
+			
+			// START MAGIC OPTIONS
+			// <div class="inner" task="magic-options">
+			let m_content_inner2 = document.createElement('div');
+				m_content_inner2.classList.add('inner');
+				m_content_inner2.setAttribute('task', 'magic-options');
+			// <div class="wrap">
+			let m_content_inner2_save = document.createElement('div');
+				m_content_inner2_save.classList.add('wrap');
+			// <button onclick="">SAVE</button
+			let m_content_inner2_save_btn = document.createElement('button');
+				m_content_inner2_save_btn.setAttribute('onclick', "_C._save('skill')");
+			let saveTXT = document.createTextNode('Save');
+			
+			m_content_inner2_save_btn.appendChild(saveTXT);
+			m_content_inner2_save.appendChild(m_content_inner2_save_btn);
+
+			m_content_inner2.appendChild(m_content_inner2_save);
+			// END MAGIC OPTIONS
+
+			m_content_wrap2.appendChild(m_content_inner1);
+			m_content_wrap2.appendChild(m_content_inner2);
 
 			m_content_element2.appendChild(m_content_wrap2);
-			//END MAGIC PLACEHOLDER
+			//END MAGIC VALUES
 
 			m_content.appendChild(m_content_element)
 			m_content.appendChild(m_content_element2)
 
 			inner_acc_content.appendChild(m_content);
-		// END MAGIC CONTENT
+			// END MAGIC CONTENT
 
-		// START MAGIC ACCORDION
+			// START MAGIC ACCORDION
 			inner_acc_title.appendChild(dom_content_inner);
 
 			inner_acc_element.appendChild(inner_acc_title);
@@ -665,7 +692,7 @@ class CHARACTER {
 			inner_acc_main.appendChild(inner_acc_element);
 
 			inner_acc.appendChild(inner_acc_main);
-		// END MAGIC ACCORDION
+			// END MAGIC ACCORDION
 
 			// overwrite default content dom
 			return_dom = inner_acc;
@@ -696,6 +723,9 @@ class CHARACTER {
 		return;
 	}
 	_setup_onclick_skills(that) {
+
+		// TODO: CHANGE BUTTON LISTENERS TO HTML ONCLICK
+
 		for (let cat = 0; cat < this.skill.length; cat++) {
 			let skills_settings = this.skill[cat].parent.querySelectorAll('[item=skill] button');
 			let skills_value = this.skill[cat].parent.querySelectorAll('[item=skill] input');
@@ -827,7 +857,9 @@ class CHARACTER {
 	}
 	update_skill(task, target) {
 		// TODO BUGFIX: ALL THE SAME NAMED SKILLS WILL BE SET THE SAME VALUE
-
+		// TODO: FEATURE SAVE DIFFERENT VALUES ( MAGIC -> descr, damage, etc.)
+		console.log(task);console.log(target);
+		
 		var tp = target;
 		if(typeof(task) == 'string') {
 			tp = target.parentElement.children[0];
@@ -917,7 +949,8 @@ class CHARACTER {
 	//### SAVE FUNCTIONS
 	//#########
 	_save(cat = '') {
-
+		console.log('SAVE');console.log(cat);
+		/*
 		var data = '';
 		if(cat == 'attribute') {
 			data = this._get_attribute_savedata();
@@ -937,7 +970,7 @@ class CHARACTER {
 		xhttp.setRequestHeader('Content-Type', 'application/json');
 
 		xhttp.send();
-
+*/
 		return;
 	}
 	_get_attribute_savedata() {

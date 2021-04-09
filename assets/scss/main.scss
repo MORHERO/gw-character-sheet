@@ -139,10 +139,14 @@ input {
 	}
 }
 textarea {
+	font-family: $font;
 	background:none;
 	color:$cl-font;
-	font-size: $font-s;
-	min-width: calc(100% - 4px);
+	font-size: $font-xs;
+	min-width: calc(100% - 12px);
+	max-height: 400px;
+	padding: 4px;
+	resize: vertical;
 }
 
 [module=character-sheet] {
