@@ -1,4 +1,16 @@
 [submodule="navigation"] {
 	> .flex {
 	}
+	.nav-elem {
+		button {
+			font-size: $font-xxl;
+			border: 1px solid $cl-font;
+			border-top-right-radius: 8px;
+			border-top-left-radius: 8px;
+			margin-right: -1px;
+			&.active {
+				background-color: $cl-main-black;
+			}
+		}
+	}
 }

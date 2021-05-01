@@ -25,12 +25,11 @@
 			font-family: monospace;
 		}
 		span {line-height: 32px;}
-		
 	}
 	.flex {
 		&:last-child {
 			justify-content:center;
-			margin-top: 0.5em;
+			//margin-top: 0.5em;
 			[task='skill-add'] {
 				width: 100%;
 			}

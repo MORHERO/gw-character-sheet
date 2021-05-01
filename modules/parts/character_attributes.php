@@ -1,5 +1,6 @@
 <div submodule="attributes">
-	<div class="flex" id="attributes_content">
+	<p class="heading">Attribute</p>
+	<div id="attributes_content">
 
 		
 	</div>

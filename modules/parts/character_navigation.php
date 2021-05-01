@@ -3,7 +3,7 @@
 
 		<div class="nav-elem">
 			<div class="segment">
-				<button class="btn-clean" index="0">Fertigkeiten</button>
+				<button class="btn-clean active" index="0">Fertigkeiten</button>
 			</div>
 		</div>
 		<div class="nav-elem">

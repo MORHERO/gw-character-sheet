@@ -4,7 +4,8 @@
 		flex-wrap:nowrap;
 		flex-direction: column;
 		[task=skill-cat-add] {
-			width: 100%;
+			background-color: $cl-main-black;
+			border-color: $cl-main-dark;
 		}
 	}
 
@@ -19,7 +20,10 @@
 		cursor: pointer;
 		p {
 			margin: 0px 18px;
-			font-size: $font-xs;
+			font-size: $font-xl;
+		}
+		span {
+			font-size: $font-xl;
 		}
 
 		&:hover {

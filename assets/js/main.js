@@ -64,7 +64,18 @@ function setup_character_navigation() {
 
 	for (let i = 0; nav_elements.length > i; i++) {
 		nav_elements[i].addEventListener('click', function() {
-			master_slider.goTo(nav_elements[i].getAttribute('index'));
+			
+			let active_nav_element = main_module.querySelector('.nav-elem button.active');
+
+			if(active_nav_element != this) {
+				master_slider.goTo(nav_elements[i].getAttribute('index'));
+
+				if(active_nav_element) {
+					active_nav_element.classList.remove('active');
+				}
+				this.classList.add('active');
+			}
+			
 		})
 	}
 }
@@ -320,6 +331,7 @@ class CHARACTER {
 				
 			for (let i = 0; i < attribute_list.data.length; i++) {
 					
+				/*
 				// dom attribute setting decrease
 				let dom_attribute_setting_decrease = document.createElement('button');
 					dom_attribute_setting_decrease.setAttribute('task', 'decrease');
@@ -341,12 +353,21 @@ class CHARACTER {
 					dom_attribute_setting_close.classList.add('pos-6');
 					dom_attribute_setting_close.classList.add('btn-clean');
 					dom_attribute_setting_close.innerHTML = "x";
+				*/
 
 
 				// dom attribute parent
 				let dom_attribute = document.createElement('div');
 					dom_attribute.classList.add('attribute');
 					dom_attribute.setAttribute('item', attribute_list.data[i].type);
+				// dom attribute full title
+				let dom_attribute_full_title = document.createElement('div');
+					dom_attribute_full_title.classList.add('full-title');
+				let dom_attribute_full_title_tag = document.createElement('p');
+				let dom_attribute_full_title_content = document.createTextNode(attribute_list.data[i].type); // TODO type -> full
+				//dom attribute title / value wrapper
+				let dom_attribute_content_wrapper = document.createElement('div');
+					dom_attribute_content_wrapper.classList.add('flex');
 				// dom attribute title
 				let dom_attribute_title = document.createElement('div');
 					dom_attribute_title.classList.add('title');
@@ -355,25 +376,45 @@ class CHARACTER {
 				// dom attribute value
 				let dom_attribute_value = document.createElement('div');
 					dom_attribute_value.classList.add('value');
-				let dom_attribute_value_button = document.createElement('button');
-					dom_attribute_value_button.classList.add('btn-clean');
-					dom_attribute_value_button.setAttribute('task', 'attribute-main');
-				let dom_attribute_value_button_content = document.createTextNode(attribute_list.data[i].value);
+				let dom_attribute_value_input = document.createElement('input');
+					dom_attribute_value_input.setAttribute('type', 'text');
+					dom_attribute_value_input.setAttribute('task', 'attribute-main');
+					dom_attribute_value_input.setAttribute('value', attribute_list.data[i].value);
+				
+
+				//dom attribute dice
+				let dom_attribute_dice = document.createElement('div');
+				if(_i == 0) {
+						dom_attribute_dice.classList.add('dice-preview');
+					let dom_attribute_dice_tag = document.createElement('p');
+					let dom_attribute_dice_content = document.createTextNode(this._get_attribute_dice(attribute_list.data[i].value));
+				
+					//dom attribute dice full
+					dom_attribute_dice_tag.appendChild(dom_attribute_dice_content);
+					dom_attribute_dice.appendChild(dom_attribute_dice_tag);
+				}
+				//dom attribute full title full
+				dom_attribute_full_title_tag.appendChild(dom_attribute_full_title_content);
+				dom_attribute_full_title.appendChild(dom_attribute_full_title_tag);
 
 				//dom attribute title full
 				dom_attribute_title_tag.appendChild(dom_attribute_title_content);
 				dom_attribute_title.appendChild(dom_attribute_title_tag);
 
 				//dom attribute value full
-				dom_attribute_value_button.appendChild(dom_attribute_value_button_content);
-				dom_attribute_value.appendChild(dom_attribute_value_button);
+				dom_attribute_value.appendChild(dom_attribute_value_input);
+
+				//dom attribute title / value wrapper full
+				dom_attribute_content_wrapper.appendChild(dom_attribute_title);
+				dom_attribute_content_wrapper.appendChild(dom_attribute_value);
+				dom_attribute_content_wrapper.appendChild(dom_attribute_dice);
 
 				//dom attribute full
-				dom_attribute.appendChild(dom_attribute_title);
-				dom_attribute.appendChild(dom_attribute_value);
-				dom_attribute.appendChild(dom_attribute_setting_decrease);
-				dom_attribute.appendChild(dom_attribute_setting_increase);
-				dom_attribute.appendChild(dom_attribute_setting_close);
+				dom_attribute.appendChild(dom_attribute_full_title);
+				dom_attribute.appendChild(dom_attribute_content_wrapper);
+				//dom_attribute.appendChild(dom_attribute_setting_decrease);
+				//dom_attribute.appendChild(dom_attribute_setting_increase);
+				//dom_attribute.appendChild(dom_attribute_setting_close);
 				
 				dom_inner.appendChild(dom_attribute);
 				
@@ -465,7 +506,7 @@ class CHARACTER {
 						dom_skill_add_wrap.classList.add('flex');
 					let dom_skill_add_inner = document.createElement('button');
 						dom_skill_add_inner.setAttribute('task', 'skill-cat-add');
-					let dom_skill_add_inner_content = document.createTextNode('+');
+					let dom_skill_add_inner_content = document.createTextNode('+ Fertigkeit hinzufügen');
 
 					dom_skill_add_inner.appendChild(dom_skill_add_inner_content);
 					dom_skill_add_wrap.appendChild(dom_skill_add_inner);
@@ -858,7 +899,6 @@ class CHARACTER {
 	update_skill(task, target) {
 		// TODO BUGFIX: ALL THE SAME NAMED SKILLS WILL BE SET THE SAME VALUE
 		// TODO: FEATURE SAVE DIFFERENT VALUES ( MAGIC -> descr, damage, etc.)
-		console.log(task);console.log(target);
 		
 		var tp = target;
 		if(typeof(task) == 'string') {
@@ -942,6 +982,63 @@ class CHARACTER {
 	}
 	_remove_skill() {
 
+	}
+
+	//#########
+	//### HELPER RULE FUNCTIONS
+	//#########
+	_get_attribute_dice(value) {
+		let dice = 0;
+		switch(true) {
+			case (value <= -6):
+				dice = 'fucked';
+				break;
+			case (value == -5 || value == -4 || value == -3):
+				dice = '-1w20';
+				break;
+			case (value == -2 || value == -1):
+				dice = '-1w8';
+				break;
+			case (value == 0 || value == 1):
+				dice = '/';
+				break;
+			case (value == 2 || value == 3):
+				dice = '1w4';
+				break;
+			case (value == 4 || value == 5 || value == 6):
+				dice = '1w8';
+				break;
+			case (value == 7 || value == 8 || value == 9 || value == 10):
+				dice = '1w12';
+				break;
+			case (value == 11 || value == 12 || value == 13 || value == 14 || value == 15):
+				dice = '1w20';
+				break;
+			case (value == 16 || value == 17 || value == 18 || value == 19 || value == 20 || value == 21 || value == 22 || value == 23 || value == 24):
+				dice = '1w8 + 1w20';
+				break;
+			case (value == 25):
+				dice = '1w12 + 1w20';
+				break;
+			case (value == 26):
+				dice = '2w20';
+				break;
+			case (value == 27):
+				dice = '2w20 + 1w4';
+				break;
+			case (value == 28):
+				dice = '2w20 + 1w6';
+				break;
+			case (value == 29):
+				dice = '2w20 + 1w8';
+				break;
+			case (value == 30):
+				dice = '2w20 + 1w10';
+				break;
+			default:
+				dice = '?';
+		}
+		return dice;
 	}
 
 

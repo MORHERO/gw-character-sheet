@@ -1,5 +1,6 @@
 @import "basic/variables";
 
+@import "basic/tiny-slider";
 
 @import "basic/debug";
 
@@ -133,6 +134,8 @@ input {
 	background:none;
 	color:$cl-font;
 	font-size: $font-s;
+	border: 1px $cl-font solid;
+	padding: 2px 8px;
 	/* Chrome, Safari, Edge, Opera */
 	&::-webkit-outer-spin-button,
 	&::-webkit-inner-spin-button {
