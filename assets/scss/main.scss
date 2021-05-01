@@ -27,6 +27,12 @@ main {
 	}
 }
 
+p, h1, h2, h3, h4, h5, h6, span, i, b, label, button {
+	font-family: $font;
+	font-size: $font-m;
+	margin: 0;
+}
+
 .main-flex {
 	display: flex;
 	justify-content: center;

@@ -6,20 +6,17 @@
 	.media-wrap {
 		margin-right: 1em;
 		.media {
-			width: 5em;
-			height: 5em;
+			width: 140px;
+			height: 140px;
 			background-color: $cl-main-dark;
 			border: 1px solid $cl-grey;
 		}
 	}
 	.info-wrap {
 		[item="base_name_main"], [item="base_name_nick"] {
-			font-size: 2em;
-			margin: 0.25em 0em 0em 0em;
+			font-size: $font-supersize;
 		}
 		[item="base_gender"], [item="base_race"] {
-			font-size: 0.75em;
-			margin: 0.75em 0em 0em 0em;
 		}
 
 		[item="base_name_main"], [item="base_gender"] {
