@@ -2,6 +2,20 @@
 ///// Sass variables
 //////////////////////
 
+//*-----|| fonts-face ||--------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------*/
+$font-path: '../fonts/';
+$font-folder: 'TeX-Gyre-Bonum/';
+$font-name: 'texgyrebonum-regular-webfont';
+@font-face {
+	font-family: 'tex_gyre_bonum';
+	src: url($font-path + $font-folder + $font-name + '.woff') format('woff'),
+		url($font-path + $font-folder + $font-name + '.ttf') format('truetype'),
+		url($font-path + $font-folder + $font-name + '.svg#tex_gyre_bonum') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
 // ----------------------------------------------------------------------------
 // COLORS
 // ----------------------------------------------------------------------------
@@ -27,14 +41,14 @@ $cl-font:	#D6D6D6;
 // FONTS
 // ----------------------------------------------------------------------------
 // sizes
-$font-supersize:	60px;
-$font-xxl:			46px;
-$font-xl:			40px;
-$font-l:			30px;
-$font-m:			26px;
-$font-s:			18px;
-$font-xs:			14px;
-$font-xxs:			12px;
+$font-supersize:	32px;
+$font-xxl:			22px;
+$font-xl:			20px;
+$font-l:			18px;
+$font-m:			16px;
+$font-s:			14px;
+$font-xs:			12px;
+$font-xxs:			10px;
 
 //weights
 $font-regular:		400;
@@ -43,8 +57,7 @@ $font-bold:			700;
 $font-extrabold:	800;
 
 // families
-
-$font: "Montserrat", sans-serif;
+$font: 'tex_gyre_bonum', sans-serif;
 $font-tech: "Lucida Console", Monaco, monospace;
 
 // ----------------------------------------------------------------------------
