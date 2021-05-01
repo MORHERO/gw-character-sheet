@@ -454,8 +454,48 @@ class CHARACTER {
 				let dom_title_wrap = document.createElement('div');
 					dom_title_wrap.setAttribute('task', 'accordion_title');
 					dom_title_wrap.classList.add('main-title');
+					dom_title_wrap.classList.add('flex');
 				
 				let dom_title = document.createElement('p');
+
+
+				// accordion title settings
+				let dom_title_settings_wrap = document.createElement('div');
+					dom_title_settings_wrap.classList.add('flex');
+
+				// add skill setting
+				let dom_title_settings_add = document.createElement('div');
+					dom_title_settings_add.classList.add('settings-btn');
+				let dom_title_settings_add_btn = document.createElement('button');
+					dom_title_settings_add_btn.setAttribute('task', 'skill-add');
+				let dom_title_settings_add_btn_content = document.createTextNode('+');
+				dom_title_settings_add_btn.appendChild(dom_title_settings_add_btn_content);
+				dom_title_settings_add.appendChild(dom_title_settings_add_btn);
+
+				// edit skill setting
+				let dom_title_settings_edit = document.createElement('div');
+					dom_title_settings_edit.classList.add('settings-btn');
+					dom_title_settings_edit.classList.add('disabled');
+				let dom_title_settings_edit_btn = document.createElement('button');
+					dom_title_settings_edit_btn.setAttribute('task', 'skill-edit');
+				let dom_title_settings_edit_btn_content = document.createTextNode('e');
+				dom_title_settings_edit_btn.appendChild(dom_title_settings_edit_btn_content);
+				dom_title_settings_edit.appendChild(dom_title_settings_edit_btn);
+
+				// remove skill setting
+				let dom_title_settings_remove = document.createElement('div');
+					dom_title_settings_remove.classList.add('settings-btn');
+					dom_title_settings_remove.classList.add('disabled');
+				let dom_title_settings_remove_btn = document.createElement('button');
+					dom_title_settings_remove_btn.setAttribute('task', 'skill-remove');
+				let dom_title_settings_remove_btn_content = document.createTextNode('r');
+				dom_title_settings_remove_btn.appendChild(dom_title_settings_remove_btn_content);
+				dom_title_settings_remove.appendChild(dom_title_settings_remove_btn);
+
+				// combine settings wrap
+				dom_title_settings_wrap.appendChild(dom_title_settings_add);
+				dom_title_settings_wrap.appendChild(dom_title_settings_edit);
+				dom_title_settings_wrap.appendChild(dom_title_settings_remove);
 
 				let dom_title_content = document.createTextNode(this._skills[x][t].category);
 				let dom_title_content_inner = document.createElement('span');
@@ -470,6 +510,7 @@ class CHARACTER {
 				dom_title.appendChild(dom_title_content);
 				dom_title.appendChild(dom_title_content_inner);
 				dom_title_wrap.appendChild(dom_title);
+				dom_title_wrap.appendChild(dom_title_settings_wrap);
 
 				dom_parent.appendChild(dom_title_wrap);
 
@@ -480,6 +521,7 @@ class CHARACTER {
 					dom_content_wrap.appendChild(dom_content_inner);
 				}
 
+				/*
 				// ADD SKILL BUTTON
 				let dom_skill_add_wrap = document.createElement('div');
 					dom_skill_add_wrap.classList.add('flex');
@@ -490,6 +532,7 @@ class CHARACTER {
 				dom_skill_add_inner.appendChild(dom_skill_add_inner_content);
 				dom_skill_add_wrap.appendChild(dom_skill_add_inner);
 				dom_content_wrap.appendChild(dom_skill_add_wrap);
+				*/
 
 
 
