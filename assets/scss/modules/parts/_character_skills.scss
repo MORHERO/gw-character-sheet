@@ -1,11 +1,17 @@
 [submodule='skills'] {
 	[item='skill'].flex {
+		flex-wrap: nowrap;
 		border-bottom: 1px solid $cl-darkgrey;
 		> div {
 			display: flex;
 			align-items:center;
 			flex-basis:50%;
 			max-width: 250px;
+			&:last-child {
+				max-width: inherit;
+				flex-grow: 1; 
+				justify-content: flex-end;
+			}
 		}
 		input {
 			border: 1px solid $cl-grey;
@@ -14,13 +20,16 @@
 			text-align: center;
 			margin-right: 2px;
 		}
+		.settings-btn {
+			margin-right: 0px;
+		}
 		button {
 			position: relative;
 			margin: 0px 2px;
 			width: 24px;
 			height: 24px;
 			border: 1px solid $cl-main-black;
-			&[task] {
+			&[icon] {
 				&:after {
 					content:"";
 					position: absolute;
@@ -28,10 +37,8 @@
 					left:-1px;
 					width: 24px;
 					height: 24px;
+					transform: scale(0.75);
 				}
-			}
-			&:hover {
-				background-color: $cl-darkgrey;
 			}
 		}
 		span {

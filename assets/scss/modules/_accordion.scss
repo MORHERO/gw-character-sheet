@@ -6,6 +6,9 @@
 		[task=skill-cat-add] {
 			background-color: $cl-main-black;
 			border-color: $cl-main-dark;
+			&:hover {
+				background-color: $cl-main-black-60;
+			}
 		}
 	}
 
@@ -14,15 +17,15 @@
 	}
 
 	[task=accordion_title] {
-		font-weight: bold;
 		padding: 8px 0px;
 		margin-top: -16px;
 		background-color: $cl-main-black;
 		cursor: pointer;
 		justify-content: space-between;
-		p {
+		>p {
 			margin: 0px 18px;
 			font-size: $font-xl;
+			pointer-events: none;
 		}
 		span {
 			font-size: $font-xl;

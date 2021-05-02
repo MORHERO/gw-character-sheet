@@ -278,7 +278,7 @@ class CHARACTER {
 					//<div class="dice-preview">
 						dom_attribute_dice.classList.add('dice-preview');
 					//<p> this._get_attribute_dice(attribute_list.data[i].value)</p>
-					let dom_attribute_dice_tag = this._createSimpleElement('p', '', '', this._get_attribute_dice(attribute_list.data[i].value));
+					let dom_attribute_dice_tag = this._createSimpleElement('p', '', '', RULE.get_attribute_dice(attribute_list.data[i].value));
 					
 					//dom attribute dice full
 					dom_attribute_dice.appendChild(dom_attribute_dice_tag);
@@ -337,7 +337,7 @@ class CHARACTER {
 
 				let dom_title_settings_add = this._get_dom_settings_btn('skill-add');
 				let dom_title_settings_edit = this._get_dom_settings_btn('skill-edit', true);
-				let dom_title_settings_remove = this._get_dom_settings_btn('skill-remove', true);
+				let dom_title_settings_remove = this._get_dom_settings_btn('skill-cat-remove');
 
 				// combine settings wrap
 
@@ -359,7 +359,10 @@ class CHARACTER {
 
 				for (let i = 0; i < this._skills[x][t].data.length; i++) {
 					let skill = this._skills[x][t].data[i];
-					let dom_content_inner = this._create_skill_dom(skill, this.skill[x].category);
+
+					let catid = '' + x + '-' + t + '';
+
+					let dom_content_inner = this._create_skill_dom(skill, this.skill[x].category, catid);
 
 					dom_content_wrap.appendChild(dom_content_inner);
 				}
@@ -440,14 +443,14 @@ class CHARACTER {
 		return dom_parent;
 	}
 
-	_create_skill_dom(skill, category) {
+	_create_skill_dom(skill, category, catid="") {
 		let return_dom = {};
 
 		// SETTINGS SETUP
 		let dom_skill_setting_decrease = this._get_dom_settings_btn('decrease');
 		let dom_skill_setting_increase = this._get_dom_settings_btn('increase');
 		let dom_skill_setting_edit = this._get_dom_settings_btn('skill-edit', true);
-		let dom_skill_setting_remove = this._get_dom_settings_btn('skill-remove', true);
+		let dom_skill_setting_remove = this._get_dom_settings_btn('skill-remove');
 
 		let dom_skill_settings_wrapper = document.createElement('div');
 			dom_skill_settings_wrapper.classList.add('flex');
@@ -456,7 +459,7 @@ class CHARACTER {
 
 		// START ACCORDION DECLARATION
 		// <div class="flex" item="skill">
-		let dom_content_inner = this._createSimpleElement('div', 'flex', [['item', 'skill']]);
+		let dom_content_inner = this._createSimpleElement('div', 'flex', [['item', 'skill'], ['catid', catid], ['skill-title', skill.title]]);
 		
 		// START ACCORDION TITLE
 		// <div>
@@ -577,7 +580,7 @@ class CHARACTER {
 	//#
 	//# SETUP HELPERS
 	//#
-	_get_dom_settings_btn(task, disabled=false) {
+	_get_dom_settings_btn(icon, disabled=false) {
 
 		let return_dom = this._createSimpleElement('div', 'settings-btn');
 		
@@ -585,11 +588,15 @@ class CHARACTER {
 			return_dom.classList.add('disabled');
 		}
 
-		let attributes = [['task', task]];
-		if(task == 'increase' || task == 'decrease') {
-			attributes = [['task', task], ['onclick', '_C.update_skill(this.getAttribute("task"),this)']];
-		}else if(task == 'skill-add') {
-			attributes = [['task', task], ['onclick', '_C._toggle_addSkill_overlay(this)']];
+		let attributes = [['icon', icon]];
+		if(icon == 'increase' || icon == 'decrease') {
+			attributes = [['icon', icon], ['onclick', '_C.update_skill(this.getAttribute("task"),this)']];
+		}else if(icon == 'skill-add') {
+			attributes = [['icon', icon], ['onclick', '_C._toggle_addSkill_overlay(this)']];
+		}else if(icon == 'skill-cat-remove') {
+			attributes = [['icon', icon], ['onclick', '_C.remove_skill_cat(this)']];
+		}else if(icon == 'skill-remove') {
+			attributes = [['icon', icon], ['onclick', '_C.remove_skill(this)']];
 		}
 
 		let dom_child = this._createSimpleElement('button', '', attributes);
@@ -663,9 +670,7 @@ class CHARACTER {
 
 		return;
 	}
-	_test(a,s){
-		console.log(a);console.log(s);
-	}
+
 	_setup_onclick_skills(that) {
 
 		// TODO: CHANGE BUTTON LISTENERS TO HTML ONCLICK
@@ -731,6 +736,31 @@ class CHARACTER {
 		skill_add_save.setAttribute('catid', cat_parent.getAttribute('catid'));
 	}
 
+	_toggle_updateXP_overlay(trigger) {
+		console.log(trigger);
+	}
+
+	_toggle_removeSkillCat_overlay(trigger="") {
+		let overlay = this.main_parent.querySelector('[overlay=remove_skill_cat]');
+		overlay.classList.toggle('active');
+		let btn = overlay.querySelector('[task=remove_skill_cat]');
+		
+		if(trigger) {
+			btn.setAttribute('trigger', trigger.parentElement.parentElement.parentElement.parentElement.getAttribute('catid'));
+		}
+		return;
+	}
+	_toggle_removeSkill_overlay(trigger="") {
+		let overlay = this.main_parent.querySelector('[overlay=remove_skill]');
+		overlay.classList.toggle('active');
+		let btn = overlay.querySelector('[task=remove_skill]');
+
+		if(trigger) {
+			btn.setAttribute('catid', trigger.parentElement.parentElement.parentElement.getAttribute('catid'));
+			btn.setAttribute('skill-title', trigger.parentElement.parentElement.parentElement.getAttribute('skill-title'));
+		}
+		return;
+	}
 
 
 	//#########
@@ -861,67 +891,72 @@ class CHARACTER {
 
 		return;
 	}
-	_remove_skill() {
 
+	//#########
+	//### REMOVE FUNCTIONS
+	//#########
+	remove_skill_cat(trigger) { // user triggert remove
+		this._toggle_removeSkillCat_overlay(trigger);
+
+		return;
 	}
-
-	//#########
-	//### HELPER RULE FUNCTIONS
-	//#########
-	_get_attribute_dice(value) {
-		let dice = 0;
-		switch(true) {
-			case (value <= -6):
-				dice = 'fucked';
-				break;
-			case (value == -5 || value == -4 || value == -3):
-				dice = '-1w20';
-				break;
-			case (value == -2 || value == -1):
-				dice = '-1w8';
-				break;
-			case (value == 0 || value == 1):
-				dice = '/';
-				break;
-			case (value == 2 || value == 3):
-				dice = '1w4';
-				break;
-			case (value == 4 || value == 5 || value == 6):
-				dice = '1w8';
-				break;
-			case (value == 7 || value == 8 || value == 9 || value == 10):
-				dice = '1w12';
-				break;
-			case (value == 11 || value == 12 || value == 13 || value == 14 || value == 15):
-				dice = '1w20';
-				break;
-			case (value == 16 || value == 17 || value == 18 || value == 19 || value == 20 || value == 21 || value == 22 || value == 23 || value == 24):
-				dice = '1w8 + 1w20';
-				break;
-			case (value == 25):
-				dice = '1w12 + 1w20';
-				break;
-			case (value == 26):
-				dice = '2w20';
-				break;
-			case (value == 27):
-				dice = '2w20 + 1w4';
-				break;
-			case (value == 28):
-				dice = '2w20 + 1w6';
-				break;
-			case (value == 29):
-				dice = '2w20 + 1w8';
-				break;
-			case (value == 30):
-				dice = '2w20 + 1w10';
-				break;
-			default:
-				dice = '?';
+	_remove_skill_cat(trigger) {
+		let catid = "";
+		if(trigger.hasAttribute('trigger')) {
+			catid = trigger.getAttribute('trigger');
+		}else {
+			catid = trigger.parentElement.parentElement.parentElement.getAttribute('catid');
 		}
-		return dice;
-	}
 
+		let type_id = catid.match(/^[0-9]+/)[0];
+		let cat_id = catid.match(/[0-9]+$/)[0];
+
+		let i = -1;
+		this._skills[type_id] = this._skills[type_id].filter(x => {
+			i++;
+			return i != cat_id;
+		});
+		let skill_cat_dom = this.main_parent.querySelector('[catid="' + catid + '"]');
+		skill_cat_dom.remove();
+
+		this._toggle_removeSkillCat_overlay();
+
+		this._save('skill');
+
+		return;
+	}
+	remove_skill(trigger) {
+		this._toggle_removeSkill_overlay(trigger);
+
+		return;
+	}
+	_remove_skill(trigger) {
+		let catid = "";
+		let skill_title = "";
+		if(trigger.hasAttribute('catid')) {
+			catid = trigger.getAttribute('catid');
+			skill_title = trigger.getAttribute('skill-title');
+		}else {
+			catid = trigger.parentElement.parentElement.parentElement.getAttribute('catid');
+			skill_title = trigger.parentElement.parentElement.parentElement.getAttribute('skill-title');
+		}
+		let type_id = catid.match(/^[0-9]+/)[0];
+		let cat_id = catid.match(/[0-9]+$/)[0];
+
+		let i = -1;
+		this._skills[type_id][cat_id].data = this._skills[type_id][cat_id].data.filter(x => {
+			return x.title != skill_title;
+		});
+
+		let skill_dom = this.main_parent.querySelector('[item=skill][skill-title='+skill_title+']');
+		skill_dom.remove();
+
+		this._toggle_removeSkill_overlay();
+
+		this._save('skill');
+
+		return;
+	}
 
 	//#########
 	//### SAVE FUNCTIONS

@@ -174,7 +174,7 @@ textarea {
 		border-color: $cl-main-dark;
 		color: $cl-black;
 		cursor:pointer;
-		&[task] {
+		&[icon] {
 			&:after {
 				content:"";
 				position: absolute;
@@ -184,27 +184,22 @@ textarea {
 				height: 24px;
 			}
 		}
-		&[task=skill-add] {
+		&[icon=skill-add], &[icon=add], &[icon=increase] {
 			&:after {
 				background-image: url(../media/icon/plus.svg);
 			}
 		}
-		&[task=skill-edit] {
+		&[icon=skill-edit] {
 			&:after {
 				background-image: url(../media/icon/edit.svg);
 			}
 		}
-		&[task=skill-remove] {
+		&[icon=skill-remove], &[icon=skill-cat-remove] {
 			&:after {
 				background-image: url(../media/icon/remove.svg);
 			}
 		}
-		&[task=increase] {
-			&:after {
-				background-image: url(../media/icon/plus.svg);
-			}
-		}
-		&[task=decrease] {
+		&[icon=decrease] {
 			&:after {
 				background-image: url(../media/icon/minus.svg);
 			}
@@ -215,8 +210,8 @@ textarea {
 	}
 	&.disabled {
 		button {
-			cursor: normal;
-			&[task] {
+			cursor: default;
+			&[icon] {
 				&:after {
 					opacity: 0.4;
 				}

@@ -53,7 +53,9 @@ class ACCORDION {
 		for (let i = 0; i < title_elements.length; i++) {
 		
 			title_elements[i].addEventListener('click', function(e) {
-				that.open_element(this);
+				if(title_elements[i] == e.target) {
+					that.open_element(this);
+				}
 			});
 		}
 		return;
