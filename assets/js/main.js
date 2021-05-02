@@ -249,26 +249,35 @@ class CHARACTER {
 			for (let i = 0; i < attribute_list.data.length; i++) {
 
 				// dom attribute parent
+				//<div class="attribute" item="attribute_list.data[i].type">
 				let dom_attribute = this._createSimpleElement('div', 'attribute', [['item', attribute_list.data[i].type]]);
 			
 				// dom attribute full title
 				// TODO: USE FULL TITLE NOT TYPE
+				//<div class="full-title"><p>attribute_list.data[i].type</p>
 				let dom_attribute_full_title = this._createSimpleElement('div', 'full-title', '', attribute_list.data[i].type, 'p');
 				
 				//dom attribute title / value wrapper
+				//<div class="flex">
 				let dom_attribute_content_wrapper = this._createSimpleElement('div', 'flex');
 				
 				// dom attribute title
+				//<div class="title"><p>attribute_list.data[i].short</p>
 				let dom_attribute_title = this._createSimpleElement('div', 'title', '', attribute_list.data[i].short, 'p');
 				
 				// dom attribute value
+				//<div class="value">
 				let dom_attribute_value = this._createSimpleElement('div', 'value');
-				let dom_attribute_value_input = this._createSimpleElement('input', '', [['type', 'text'], ['task', 'attribute-main'], ['value', attribute_list.data[i].value]]);
+				//<div type="text" task="attribute-main" item="attribute_list.data[i].type" value="attribute_list.data[i].value">
+				let dom_attribute_value_input = this._createSimpleElement('input', '', [['type', 'text'], ['task', 'attribute-main'], ['item', attribute_list.data[i].type], ['value', attribute_list.data[i].value]]);
 				
 				//dom attribute dice
+				//<div>
 				let dom_attribute_dice = document.createElement('div');
 				if(_i == 0) {
+					//<div class="dice-preview">
 						dom_attribute_dice.classList.add('dice-preview');
+					//<p> this._get_attribute_dice(attribute_list.data[i].value)</p>
 					let dom_attribute_dice_tag = this._createSimpleElement('p', '', '', this._get_attribute_dice(attribute_list.data[i].value));
 					
 					//dom attribute dice full
@@ -310,17 +319,20 @@ class CHARACTER {
 		for (let x = 0; x < this._skills.length; x++) {
 			for (let t = 0; t < this._skills[x].length; t++) {
 				let dom_element_list = [];
-
+				
+				// <div class="element" catid="x-t">
 				let dom_parent = this._createSimpleElement('div', 'element', [['catID', '' + x + '-' + t ]]);
 				
 				//dom_parent = this._create_skill_cat_dom(x, this._skills[x][t]);
 
 				// accordion title
+				// <div class="main-title flex" task="accordion_title">
 				let dom_title_wrap = this._createSimpleElement('div', ['main-title', 'flex'], [['task', 'accordion_title']]);
-				
+				// <p>
 				let dom_title = this._createSimpleElement('p');
 				
 				// accordion title settings
+				// <div class="flex">
 				let dom_title_settings_wrap = this._createSimpleElement('div', 'flex');
 
 				let dom_title_settings_add = this._get_dom_settings_btn('skill-add');
@@ -332,14 +344,14 @@ class CHARACTER {
 				dom_title_settings_wrap = this._appendChild_loop(dom_title_settings_wrap, [dom_title_settings_add, dom_title_settings_edit, dom_title_settings_remove]);
 
 				let dom_title_content = document.createTextNode(this._skills[x][t].category);
-				let dom_title_content_inner = document.createElement('span');
-				let dom_title_content_inner_sum = document.createTextNode(' (0)');
+				// <span> (0)</span>
+				let dom_title_content_inner = this._createSimpleElement('span', '', '', ' (0)');
 				
 				// accordion content
+				// <div task="accordion_content">
 				let dom_content_wrap = this._createSimpleElement('div', '', [['task', 'accordion_content']]);
 
 				// accordion title
-				dom_title_content_inner.appendChild(dom_title_content_inner_sum);
 				dom_title = this._appendChild_loop(dom_title, [dom_title_content, dom_title_content_inner]);
 				dom_title_wrap = this._appendChild_loop(dom_title_wrap, [dom_title, dom_title_settings_wrap]);
 
@@ -363,7 +375,7 @@ class CHARACTER {
 				if(t == this._skills[x].length - 1) {
 					let dom_skill_add_wrap = this._createSimpleElement('div', 'flex');
 					
-					let dom_skill_add_inner = this._createSimpleElement('button', '', [['task', 'skill-cat-add']], '+ Fertigkeit hinzufügen');
+					let dom_skill_add_inner = this._createSimpleElement('button', '', [['task', 'skill-cat-add'], ['onclick', '_C._toggle_addSkillCat_overlay(this)']], '+ Fertigkeit hinzufügen');
 					
 					dom_skill_add_wrap.appendChild(dom_skill_add_inner);
 
@@ -405,14 +417,17 @@ class CHARACTER {
 		let dom_parent = this._createSimpleElement('div', 'element', [['catID', '' + type_id + '-' + (this._skills[type_id].length)]]);
 		
 		// accordion title
+		// <div task="accordion_title">
 		let dom_title_wrap = this._createSimpleElement('div', '', [['task', 'accordion_title']]);
-		
+		// <p>
 		let dom_title = this._createSimpleElement('p');
-
+		// "cat.category"
 		let dom_title_content = document.createTextNode(cat.category);
+		// <span> (0)</span>
 		let dom_title_content_inner = this._createSimpleElement('span', '', '', ' (0)');
 		
 		// accordion content
+		// <div task="accordion_content">
 		let dom_content_wrap = this._createSimpleElement('div', '', [['task', 'accordion_content']]);
 
 		// accordion title
@@ -510,8 +525,6 @@ class CHARACTER {
 
 			// START MAGIC VALUES
 			// <div class="element">
-			// START MAGIC VALUES
-			// <div class="element">
 			let m_content_element2 = this._createSimpleElement('div', 'element');
 			
 			// <div class="flex">
@@ -571,7 +584,15 @@ class CHARACTER {
 		if(disabled) {
 			return_dom.classList.add('disabled');
 		}
-		let dom_child = this._createSimpleElement('button', '', [['task', task]]);
+
+		let attributes = [['task', task]];
+		if(task == 'increase' || task == 'decrease') {
+			attributes = [['task', task], ['onclick', '_C.update_skill(this.getAttribute("task"),this)']];
+		}else if(task == 'skill-add') {
+			attributes = [['task', task], ['onclick', '_C._toggle_addSkill_overlay(this)']];
+		}
+
+		let dom_child = this._createSimpleElement('button', '', attributes);
 		
 		return_dom.appendChild(dom_child);
 
@@ -584,7 +605,7 @@ class CHARACTER {
 		}
 		return parent;
 	}
-//[['submodule', 'accordion_inner'], ['sub_acc', true]]
+
 	_createSimpleElement(tag_name='div', class_name='', attributes='',text='', text_wrapper=''){
 		let element = document.createElement(tag_name);
 		if(class_name) {
@@ -631,48 +652,30 @@ class CHARACTER {
 	}
 
 	_setup_onclick_attributes(that) {
-		this.attribute.parent.addEventListener('click', function(e) {
-			if(e.target.getAttribute('task') == 'attribute-main' || e.target.getAttribute('task') == 'close') {
-				that.toggle_active(e.target);
-			}else if(e.target.getAttribute('task') == 'decrease' || e.target.getAttribute('task') == 'increase') {
-				that.update_attribute(e.target.getAttribute('task'), e.target);
-			}
-		});
+
+		let attribute_values = this.attribute['parent'].querySelectorAll('[task=attribute-main]');
+
+		for (let i = 0; i < attribute_values.length; i++) {
+			attribute_values[i].addEventListener('blur', function(e) {
+				that.update_attribute(parseInt(e.target.value), e.target);
+			});
+		}
+
 		return;
+	}
+	_test(a,s){
+		console.log(a);console.log(s);
 	}
 	_setup_onclick_skills(that) {
 
 		// TODO: CHANGE BUTTON LISTENERS TO HTML ONCLICK
 
 		for (let cat = 0; cat < this.skill.length; cat++) {
-			let skills_settings = this.skill[cat].parent.querySelectorAll('[item=skill] button');
 			let skills_value = this.skill[cat].parent.querySelectorAll('[item=skill] input');
-			let skill_add = this.skill[cat].parent.querySelectorAll('[task=skill-add]');
-
-			for (let i = 0; i < skills_settings.length; i++) {
-				skills_settings[i].addEventListener('click', function(e) {
-					that.update_skill(e.target.getAttribute('task'), e.target);
-				});
-			}
 
 			for (let i = 0; i < skills_value.length; i++) {
 				skills_value[i].addEventListener('blur', function(e) {
-					that.update_skill(parseInt(e.target.value), e.target, );
-				});
-				skills_value[i].addEventListener('keypress', function(e) {
-					if(/[^0-9]/.exec(e.key)){
-						e.preventDefault();
-					}
-				});
-			}
-
-			for (let i = 0; i < skill_add.length; i++) {
-				skill_add[i].addEventListener('click', function(e) {
-					let cat_parent = e.target.parentElement.parentElement.parentElement;
-					let skill_add_save = that.main_parent.querySelector('button[task=save_new_skill]');
-					
-					that.skill_overlay.classList.add('active');
-					skill_add_save.setAttribute('catid', cat_parent.getAttribute('catid'));
+					that.update_skill(parseInt(e.target.value), e.target);
 				});
 			}
 		}
@@ -694,29 +697,6 @@ class CHARACTER {
 		});
 
 		// SKILL CATEGORY ADD
-		let skill_cat_add = that.main_parent.querySelectorAll('[task=skill-cat-add]');
-		let skill_cat_add_save = this.main_parent.querySelector('button[task=save_new_skill_cat]');
-		for (let i = 0; i < skill_cat_add.length; i++) {
-			skill_cat_add[i].addEventListener('click', function(e) {
-				let parent = e.target.parentElement.parentElement;
-				
-				that.skill_cat_overlay.classList.add('active');
-				skill_cat_add_save.setAttribute('typeid', parent.getAttribute('id'));
-			});
-		}
-		skill_cat_add_save.addEventListener('click', function(e) {
-			let skill_cat_title = that.skill_cat_overlay.querySelector('[name=skill_cat_title]');
-			let type_id = skill_cat_add_save.getAttribute('typeid');
-
-			that._add_skill_cat(type_id, skill_cat_title.value);
-		});
-
-		/*document.addEventListener('keypress', function(e) {
-			console.log(e);
-			if(that.skill_overlay.classList.contains('active')) {
-				that.skill_overlay.classList.remove('active');
-			}
-		});*/
 
 		let overlays = that.main_parent.querySelectorAll('.overlay');
 		for (let i = 0; i < overlays.length; i++) {
@@ -730,6 +710,28 @@ class CHARACTER {
 
 		return;
 	}
+
+	//#########
+	//### OVERLAY FUNCTIONS
+	//#########
+	_toggle_addSkillCat_overlay(trigger) {
+		let skill_cat_add_save = this.main_parent.querySelector('button[task=save_new_skill_cat]');
+
+		let parent = trigger.parentElement.parentElement;
+		this.skill_cat_overlay.classList.add('active');
+		skill_cat_add_save.setAttribute('typeid', parent.getAttribute('id'));
+	}
+
+
+	_toggle_addSkill_overlay(trigger) {
+		let cat_parent = trigger.parentElement.parentElement.parentElement.parentElement;
+		let skill_add_save = this.main_parent.querySelector('button[task=save_new_skill]');
+
+		this.skill_overlay.classList.add('active');
+		skill_add_save.setAttribute('catid', cat_parent.getAttribute('catid'));
+	}
+
+
 
 	//#########
 	//### UPDATE FUNCTIONS
@@ -747,14 +749,14 @@ class CHARACTER {
 		return;
 	}
 	update_attribute(task, target) {
-
+		
 		for (let cat = 0; cat < this._attributes.length; cat++) {
 			let attr = this._attributes[cat].data;
 			
 			for (let i = 0; i < this._attributes[cat].data.length; i++) {
 				
-				if( attr[i].type == target.parentElement.getAttribute('item') ) {
-					
+				if( attr[i].type == target.getAttribute('item') ) {
+
 					if(typeof(task) == 'string') {
 						if(task == 'increase') {
 							this._attributes[cat].data[i].value = attr[i].value + 1;
@@ -762,6 +764,7 @@ class CHARACTER {
 							this._attributes[cat].data[i].value = attr[i].value - 1;
 						}
 					}else if(typeof(task) == 'number') {
+						
 						attr[i].value = task;
 					}
 					
@@ -771,7 +774,7 @@ class CHARACTER {
 			}
 		}
 
-		//this._save(this._attributes);
+		this._save('attribute');
 	}
 	update_skill(task, target) {
 		// TODO BUGFIX: ALL THE SAME NAMED SKILLS WILL BE SET THE SAME VALUE
@@ -779,7 +782,8 @@ class CHARACTER {
 		
 		var tp = target;
 		if(typeof(task) == 'string') {
-			tp = target.parentElement.children[0];
+
+			tp = target.parentElement.parentElement.children[0];
 		}
 
 		var category = tp.getAttribute('category');
@@ -923,8 +927,7 @@ class CHARACTER {
 	//### SAVE FUNCTIONS
 	//#########
 	_save(cat = '') {
-		console.log('SAVE');console.log(cat);
-		/*
+		
 		var data = '';
 		if(cat == 'attribute') {
 			data = this._get_attribute_savedata();
@@ -944,7 +947,7 @@ class CHARACTER {
 		xhttp.setRequestHeader('Content-Type', 'application/json');
 
 		xhttp.send();
-*/
+
 		return;
 	}
 	_get_attribute_savedata() {
