@@ -17,7 +17,7 @@
 	}
 
 	[task=accordion_title] {
-		padding: 8px 0px;
+		padding: 14px 0px;
 		margin-top: -16px;
 		background-color: $cl-main-black;
 		cursor: pointer;
@@ -43,7 +43,7 @@
 		height: 0px;
 		overflow: hidden;
 		opacity: 0;
-		background-color: $cl-main;
+		background-color: $cl-main-dark;
 		padding: 8px 12px;
 		button[task=skill-add] {
 			background-color: $cl-main;

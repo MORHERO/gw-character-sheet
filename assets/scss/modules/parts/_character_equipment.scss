@@ -1,33 +1,73 @@
 [submodule='equipment'] {
 	>.flex {
+		flex-wrap: nowrap;
 		.main {
 			flex-basis: 75%;
-			padding: 0.5em;
+			margin-right: 12px;
 		}
 		.sub {
 			flex-basis: 25%;
-			padding: 0.5em;
 		}
 	}
+	[item=equipment] {
+		border-bottom: 1px solid $cl-darkgrey;
+		>.flex {
+			&.base-section {
+				&>div:last-child {
+					flex-grow: 1;
+					justify-content: flex-end;
+				}
+			}
+			&.info-section {
+				
+			}
+		}
+	}
+
 	#money_content {
+		.heading {
+			padding: 14px 0px;
+			background-color: $cl-main-black;
+			justify-content: space-between;
+			>p {
+				margin: 0px 18px;
+				font-size: $font-xl;
+				pointer-events: none;
+			}
+		}
 		>.flex {
 			justify-content: space-between;
+			background-color: $cl-main-dark;
+			padding: 8px 12px;
 			>div {
 				flex-basis: 50%;
 			}
-			p {
+		}
+		[item=money_main], [item=money_bank] {
+			>p {
 				margin:0;
+				font-size: $font-l;
 			}
 		}
 		.group {
-			padding: 0.5em 0.5em;
+			padding: 6px;
 			border: 1px solid $cl-grey;
 			
+			>.flex {
+				flex-wrap: nowrap;
+			}
 			[item=money_amount] {
 				text-align: right;
 			}
 			span {
 				font-size: 0.6em;
+			}
+			p {
+				font-family: $font-tech;
+				&.info {
+					font-size: $font-xxs;
+					color:$cl-darkgrey;
+				}
 			}
 
 			input {
