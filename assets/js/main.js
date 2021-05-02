@@ -40,9 +40,6 @@ var skills_list = [];
 var skills_fight_list = [];
 var skills_magic_list = [];
 
-var accordion_elements = {};
-var submodule_accordion_list = [];
-
 /***BASE SETUP***/
 //SLIDER MODULE
 const master_slider = tns({
@@ -80,78 +77,7 @@ function setup_character_navigation() {
 	}
 }
 setup_character_navigation();
-// ACCORDION MODULE
-class ACCORDION {
-	constructor (parent) {
-		this.parent = parent;
-		this.elements = parent.querySelectorAll('.element');
-		this.active_element = "";
 
-		this.accordions_inner = this.parent.querySelectorAll('[submodule=accordion_inner]');
-
-		this._setup_user_buttons();
-		if (this.accordions_inner) {
-			this._setup_inner_accordions();
-		}
-	}
-
-	open_element(elem, inner=false) {
-		
-		if(elem.nextElementSibling.classList.contains('active')) {
-			this.close_element(elem.nextElementSibling);
-		}else if (!inner) {
-			if(this.active_element != "") {this.close_element(elem.nextElementSibling, true);}
-
-			elem.nextElementSibling.classList.add('active');
-			this.active_element = elem.nextElementSibling;
-		} else {
-			elem.nextElementSibling.classList.add('active');
-		}
-		
-		return;
-	}
-
-	close_element(elem, parent_acc = false) {
-		elem.classList.remove('active');
-
-		if(parent_acc) {
-			let active_elements = this.parent.querySelectorAll('[task=accordion_content].active');
-
-			for (let i = 0; i < active_elements.length; i++) {
-				active_elements[i].classList.remove('active');
-			}
-		}
-
-		return;
-	}
-
-	_setup_user_buttons() {
-		const that = this;
-
-		let title_elements = this.parent.querySelectorAll('[task=accordion_title]:not(.sub-title)');
-		for (let i = 0; i < title_elements.length; i++) {
-		
-			title_elements[i].addEventListener('click', function(e) {
-				that.open_element(this);
-			});
-		}
-		return;
-	}
-
-	_setup_inner_accordions() {
-		const that = this;
-		for (let i = 0; i < this.accordions_inner.length; i++) {
-			let title_elements = this.accordions_inner[i].querySelectorAll('[task=accordion_title].sub-title');
-
-			for (let i = 0; i < title_elements.length; i++) {
-				title_elements[i].addEventListener('click', function(e) {
-					that.open_element(this, true);
-				});
-			}
-
-		}
-	}
-}
 
 /***CONTENT SETUP***/
 
@@ -166,14 +92,6 @@ function setup_character_data() {
 }
 function character_loaded() {
 	setup_accordions();
-}
-function setup_accordions() {
-	accordion_elements = document.querySelectorAll('[submodule=accordion]');
-	submodule_accordion_list = [];
-
-	for (let i = 0; i < accordion_elements.length; i++) {
-		submodule_accordion_list.push(new ACCORDION(accordion_elements[i]));
-	}
 }
 
 class CHARACTER {
@@ -323,101 +241,51 @@ class CHARACTER {
 		for (let _i = 0; _i < this._attributes.length; _i++) {
 			let attribute_list = this._attributes[_i];
 
-			let dom_parent = document.createElement('div');
-				dom_parent.classList.add('attributes-wrapper');
 
-			let dom_inner = document.createElement('div');
-				dom_inner.classList.add('flex');
-				
+			let dom_parent = this._createSimpleElement('div', 'attributes-wrapper');
+			
+			let dom_inner = this._createSimpleElement('div', 'flex');
+			
 			for (let i = 0; i < attribute_list.data.length; i++) {
-					
-				/*
-				// dom attribute setting decrease
-				let dom_attribute_setting_decrease = document.createElement('button');
-					dom_attribute_setting_decrease.setAttribute('task', 'decrease');
-					dom_attribute_setting_decrease.classList.add('setting');
-					dom_attribute_setting_decrease.classList.add('pos-11');
-					dom_attribute_setting_decrease.classList.add('btn-clean');
-					dom_attribute_setting_decrease.innerHTML = "-";
-				// dom attribute setting increase
-				let dom_attribute_setting_increase = document.createElement('button');
-					dom_attribute_setting_increase.setAttribute('task', 'increase');
-					dom_attribute_setting_increase.classList.add('setting');
-					dom_attribute_setting_increase.classList.add('pos-1');
-					dom_attribute_setting_increase.classList.add('btn-clean');
-					dom_attribute_setting_increase.innerHTML = "+";
-				// dom attribute setting close
-				let dom_attribute_setting_close = document.createElement('button');
-					dom_attribute_setting_close.setAttribute('task', 'close');
-					dom_attribute_setting_close.classList.add('setting');
-					dom_attribute_setting_close.classList.add('pos-6');
-					dom_attribute_setting_close.classList.add('btn-clean');
-					dom_attribute_setting_close.innerHTML = "x";
-				*/
-
 
 				// dom attribute parent
-				let dom_attribute = document.createElement('div');
-					dom_attribute.classList.add('attribute');
-					dom_attribute.setAttribute('item', attribute_list.data[i].type);
+				let dom_attribute = this._createSimpleElement('div', 'attribute', [['item', attribute_list.data[i].type]]);
+			
 				// dom attribute full title
-				let dom_attribute_full_title = document.createElement('div');
-					dom_attribute_full_title.classList.add('full-title');
-				let dom_attribute_full_title_tag = document.createElement('p');
-				let dom_attribute_full_title_content = document.createTextNode(attribute_list.data[i].type); // TODO type -> full
-				//dom attribute title / value wrapper
-				let dom_attribute_content_wrapper = document.createElement('div');
-					dom_attribute_content_wrapper.classList.add('flex');
-				// dom attribute title
-				let dom_attribute_title = document.createElement('div');
-					dom_attribute_title.classList.add('title');
-				let dom_attribute_title_tag = document.createElement('p');
-				let dom_attribute_title_content = document.createTextNode(attribute_list.data[i].short);
-				// dom attribute value
-				let dom_attribute_value = document.createElement('div');
-					dom_attribute_value.classList.add('value');
-				let dom_attribute_value_input = document.createElement('input');
-					dom_attribute_value_input.setAttribute('type', 'text');
-					dom_attribute_value_input.setAttribute('task', 'attribute-main');
-					dom_attribute_value_input.setAttribute('value', attribute_list.data[i].value);
+				// TODO: USE FULL TITLE NOT TYPE
+				let dom_attribute_full_title = this._createSimpleElement('div', 'full-title', '', attribute_list.data[i].type, 'p');
 				
-
+				//dom attribute title / value wrapper
+				let dom_attribute_content_wrapper = this._createSimpleElement('div', 'flex');
+				
+				// dom attribute title
+				let dom_attribute_title = this._createSimpleElement('div', 'title', '', attribute_list.data[i].short, 'p');
+				
+				// dom attribute value
+				let dom_attribute_value = this._createSimpleElement('div', 'value');
+				let dom_attribute_value_input = this._createSimpleElement('input', '', [['type', 'text'], ['task', 'attribute-main'], ['value', attribute_list.data[i].value]]);
+				
 				//dom attribute dice
 				let dom_attribute_dice = document.createElement('div');
 				if(_i == 0) {
 						dom_attribute_dice.classList.add('dice-preview');
-					let dom_attribute_dice_tag = document.createElement('p');
-					let dom_attribute_dice_content = document.createTextNode(this._get_attribute_dice(attribute_list.data[i].value));
-				
+					let dom_attribute_dice_tag = this._createSimpleElement('p', '', '', this._get_attribute_dice(attribute_list.data[i].value));
+					
 					//dom attribute dice full
-					dom_attribute_dice_tag.appendChild(dom_attribute_dice_content);
 					dom_attribute_dice.appendChild(dom_attribute_dice_tag);
 				}
-				//dom attribute full title full
-				dom_attribute_full_title_tag.appendChild(dom_attribute_full_title_content);
-				dom_attribute_full_title.appendChild(dom_attribute_full_title_tag);
-
-				//dom attribute title full
-				dom_attribute_title_tag.appendChild(dom_attribute_title_content);
-				dom_attribute_title.appendChild(dom_attribute_title_tag);
 
 				//dom attribute value full
 				dom_attribute_value.appendChild(dom_attribute_value_input);
 
 				//dom attribute title / value wrapper full
-				dom_attribute_content_wrapper.appendChild(dom_attribute_title);
-				dom_attribute_content_wrapper.appendChild(dom_attribute_value);
-				dom_attribute_content_wrapper.appendChild(dom_attribute_dice);
+
+				dom_attribute_content_wrapper = this._appendChild_loop(dom_attribute_content_wrapper, [dom_attribute_title, dom_attribute_value, dom_attribute_dice]);
 
 				//dom attribute full
-				dom_attribute.appendChild(dom_attribute_full_title);
-				dom_attribute.appendChild(dom_attribute_content_wrapper);
-				//dom_attribute.appendChild(dom_attribute_setting_decrease);
-				//dom_attribute.appendChild(dom_attribute_setting_increase);
-				//dom_attribute.appendChild(dom_attribute_setting_close);
+				dom_attribute = this._appendChild_loop(dom_attribute, [dom_attribute_full_title, dom_attribute_content_wrapper]);
 				
 				dom_inner.appendChild(dom_attribute);
-				
 			}
 			dom_parent.appendChild(dom_inner);
 			this.attribute.parent.appendChild(dom_parent);
@@ -443,74 +311,37 @@ class CHARACTER {
 			for (let t = 0; t < this._skills[x].length; t++) {
 				let dom_element_list = [];
 
+				let dom_parent = this._createSimpleElement('div', 'element', [['catID', '' + x + '-' + t ]]);
 				
-				let dom_parent = document.createElement('div');
-					dom_parent.classList.add('element');
-					dom_parent.setAttribute('catID', '' + x + '-' + t );
-								
 				//dom_parent = this._create_skill_cat_dom(x, this._skills[x][t]);
 
 				// accordion title
-				let dom_title_wrap = document.createElement('div');
-					dom_title_wrap.setAttribute('task', 'accordion_title');
-					dom_title_wrap.classList.add('main-title');
-					dom_title_wrap.classList.add('flex');
+				let dom_title_wrap = this._createSimpleElement('div', ['main-title', 'flex'], [['task', 'accordion_title']]);
 				
-				let dom_title = document.createElement('p');
-
-
+				let dom_title = this._createSimpleElement('p');
+				
 				// accordion title settings
-				let dom_title_settings_wrap = document.createElement('div');
-					dom_title_settings_wrap.classList.add('flex');
+				let dom_title_settings_wrap = this._createSimpleElement('div', 'flex');
 
-				// add skill setting
-				let dom_title_settings_add = document.createElement('div');
-					dom_title_settings_add.classList.add('settings-btn');
-				let dom_title_settings_add_btn = document.createElement('button');
-					dom_title_settings_add_btn.setAttribute('task', 'skill-add');
-				//let dom_title_settings_add_btn_content = document.createTextNode('+');
-				//dom_title_settings_add_btn.appendChild(dom_title_settings_add_btn_content);
-				dom_title_settings_add.appendChild(dom_title_settings_add_btn);
-
-				// edit skill setting
-				let dom_title_settings_edit = document.createElement('div');
-					dom_title_settings_edit.classList.add('settings-btn');
-					dom_title_settings_edit.classList.add('disabled');
-				let dom_title_settings_edit_btn = document.createElement('button');
-					dom_title_settings_edit_btn.setAttribute('task', 'skill-edit');
-				//let dom_title_settings_edit_btn_content = document.createTextNode('e');
-				//dom_title_settings_edit_btn.appendChild(dom_title_settings_edit_btn_content);
-				dom_title_settings_edit.appendChild(dom_title_settings_edit_btn);
-
-				// remove skill setting
-				let dom_title_settings_remove = document.createElement('div');
-					dom_title_settings_remove.classList.add('settings-btn');
-					dom_title_settings_remove.classList.add('disabled');
-				let dom_title_settings_remove_btn = document.createElement('button');
-					dom_title_settings_remove_btn.setAttribute('task', 'skill-remove');
-				//let dom_title_settings_remove_btn_content = document.createTextNode('r');
-				//dom_title_settings_remove_btn.appendChild(dom_title_settings_remove_btn_content);
-				dom_title_settings_remove.appendChild(dom_title_settings_remove_btn);
+				let dom_title_settings_add = this._get_dom_settings_btn('skill-add');
+				let dom_title_settings_edit = this._get_dom_settings_btn('skill-edit', true);
+				let dom_title_settings_remove = this._get_dom_settings_btn('skill-remove', true);
 
 				// combine settings wrap
-				dom_title_settings_wrap.appendChild(dom_title_settings_add);
-				dom_title_settings_wrap.appendChild(dom_title_settings_edit);
-				dom_title_settings_wrap.appendChild(dom_title_settings_remove);
+
+				dom_title_settings_wrap = this._appendChild_loop(dom_title_settings_wrap, [dom_title_settings_add, dom_title_settings_edit, dom_title_settings_remove]);
 
 				let dom_title_content = document.createTextNode(this._skills[x][t].category);
 				let dom_title_content_inner = document.createElement('span');
 				let dom_title_content_inner_sum = document.createTextNode(' (0)');
 				
 				// accordion content
-				let dom_content_wrap = document.createElement('div');
-					dom_content_wrap.setAttribute('task', 'accordion_content');
+				let dom_content_wrap = this._createSimpleElement('div', '', [['task', 'accordion_content']]);
 
 				// accordion title
 				dom_title_content_inner.appendChild(dom_title_content_inner_sum);
-				dom_title.appendChild(dom_title_content);
-				dom_title.appendChild(dom_title_content_inner);
-				dom_title_wrap.appendChild(dom_title);
-				dom_title_wrap.appendChild(dom_title_settings_wrap);
+				dom_title = this._appendChild_loop(dom_title, [dom_title_content, dom_title_content_inner]);
+				dom_title_wrap = this._appendChild_loop(dom_title_wrap, [dom_title, dom_title_settings_wrap]);
 
 				dom_parent.appendChild(dom_title_wrap);
 
@@ -521,21 +352,6 @@ class CHARACTER {
 					dom_content_wrap.appendChild(dom_content_inner);
 				}
 
-				/*
-				// ADD SKILL BUTTON
-				let dom_skill_add_wrap = document.createElement('div');
-					dom_skill_add_wrap.classList.add('flex');
-				let dom_skill_add_inner = document.createElement('button');
-					dom_skill_add_inner.setAttribute('task', 'skill-add');
-				let dom_skill_add_inner_content = document.createTextNode('+');
-
-				dom_skill_add_inner.appendChild(dom_skill_add_inner_content);
-				dom_skill_add_wrap.appendChild(dom_skill_add_inner);
-				dom_content_wrap.appendChild(dom_skill_add_wrap);
-				*/
-
-
-
 				dom_parent.appendChild(dom_content_wrap);
 
 				dom_element_list.push(dom_parent);
@@ -545,13 +361,10 @@ class CHARACTER {
 				}
 				
 				if(t == this._skills[x].length - 1) {
-					let dom_skill_add_wrap = document.createElement('div');
-						dom_skill_add_wrap.classList.add('flex');
-					let dom_skill_add_inner = document.createElement('button');
-						dom_skill_add_inner.setAttribute('task', 'skill-cat-add');
-					let dom_skill_add_inner_content = document.createTextNode('+ Fertigkeit hinzufügen');
-
-					dom_skill_add_inner.appendChild(dom_skill_add_inner_content);
+					let dom_skill_add_wrap = this._createSimpleElement('div', 'flex');
+					
+					let dom_skill_add_inner = this._createSimpleElement('button', '', [['task', 'skill-cat-add']], '+ Fertigkeit hinzufügen');
+					
 					dom_skill_add_wrap.appendChild(dom_skill_add_inner);
 
 					this.skill[x].parent.appendChild(dom_skill_add_wrap);
@@ -589,35 +402,25 @@ class CHARACTER {
 	}
 
 	_create_skill_cat_dom(type_id, cat) {
-		let dom_parent = document.createElement('div');
-			dom_parent.classList.add('element');
-
-			dom_parent.setAttribute('catID', '' + type_id + '-' + (this._skills[type_id].length) );
+		let dom_parent = this._createSimpleElement('div', 'element', [['catID', '' + type_id + '-' + (this._skills[type_id].length)]]);
 		
 		// accordion title
-		let dom_title_wrap = document.createElement('div');
-			dom_title_wrap.setAttribute('task', 'accordion_title');
+		let dom_title_wrap = this._createSimpleElement('div', '', [['task', 'accordion_title']]);
 		
-		let dom_title = document.createElement('p');
+		let dom_title = this._createSimpleElement('p');
 
 		let dom_title_content = document.createTextNode(cat.category);
-		let dom_title_content_inner = document.createElement('span');
-		let dom_title_content_inner_sum = document.createTextNode(' (0)');
+		let dom_title_content_inner = this._createSimpleElement('span', '', '', ' (0)');
 		
 		// accordion content
-		let dom_content_wrap = document.createElement('div');
-			dom_content_wrap.setAttribute('task', 'accordion_content');
-
+		let dom_content_wrap = this._createSimpleElement('div', '', [['task', 'accordion_content']]);
 
 		// accordion title
-		dom_title_content_inner.appendChild(dom_title_content_inner_sum);
-		dom_title.appendChild(dom_title_content);
-		dom_title.appendChild(dom_title_content_inner);
+		dom_title = this._appendChild_loop(dom_title, [dom_title_content, dom_title_content_inner]);
 		dom_title_wrap.appendChild(dom_title);
 
 		// dom full
-		dom_parent.appendChild(dom_title_wrap);
-		dom_parent.appendChild(dom_content_wrap);
+		dom_parent = this._appendChild_loop(dom_parent, [dom_title_wrap, dom_content_wrap]);
 
 		return dom_parent;
 	}
@@ -625,58 +428,44 @@ class CHARACTER {
 	_create_skill_dom(skill, category) {
 		let return_dom = {};
 
-		// START SKILL SETTINGS DECLARATION
-		// <button task="decrease" class="setting btn-clean">-</button>
-		let dom_skill_setting_decrease = document.createElement('button');
-			dom_skill_setting_decrease.setAttribute('task', 'decrease');
-			dom_skill_setting_decrease.classList.add('setting');
-			dom_skill_setting_decrease.classList.add('btn-clean');
-			dom_skill_setting_decrease.innerHTML = "-";
-		// <button task="increase" class="setting btn-clean">+</button>
-		let dom_skill_setting_increase = document.createElement('button');
-			dom_skill_setting_increase.setAttribute('task', 'increase');
-			dom_skill_setting_increase.classList.add('setting');
-			dom_skill_setting_increase.classList.add('btn-clean');
-			dom_skill_setting_increase.innerHTML = "+";
-		// END SKILL SETTINGS DECLARATION
+		// SETTINGS SETUP
+		let dom_skill_setting_decrease = this._get_dom_settings_btn('decrease');
+		let dom_skill_setting_increase = this._get_dom_settings_btn('increase');
+		let dom_skill_setting_edit = this._get_dom_settings_btn('skill-edit', true);
+		let dom_skill_setting_remove = this._get_dom_settings_btn('skill-remove', true);
+
+		let dom_skill_settings_wrapper = document.createElement('div');
+			dom_skill_settings_wrapper.classList.add('flex');
+
+		dom_skill_settings_wrapper = this._appendChild_loop(dom_skill_settings_wrapper, [dom_skill_setting_edit, dom_skill_setting_remove]);
 
 		// START ACCORDION DECLARATION
 		// <div class="flex" item="skill">
-		let dom_content_inner = document.createElement('div');
-			dom_content_inner.classList.add('flex');
-			dom_content_inner.setAttribute('item', 'skill');
+		let dom_content_inner = this._createSimpleElement('div', 'flex', [['item', 'skill']]);
 		
 		// START ACCORDION TITLE
 		// <div>
-		let dom_content_title_sep = document.createElement('div');
+		let dom_content_title_sep = this._createSimpleElement('div');
+		
 		// <span item="skill-title">SKILL-TITLE</span>
-		let dom_skill_title = document.createElement('span');
-			dom_skill_title.setAttribute('item', 'skill-title');
-		let dom_skill_title_content = document.createTextNode(skill.title);
-		dom_skill_title.appendChild(dom_skill_title_content);
+		let dom_skill_title = this._createSimpleElement('span', '', [['item', 'skill-title']], skill.title);
+
 		dom_content_title_sep.appendChild(dom_skill_title);
 		// END ACCORDION TITLE
 
 		// START ACCORDION CONTENT
 		// <div>
-		let dom_content_value_sep = document.createElement('div');
+		let dom_content_value_sep = this._createSimpleElement('div');
+		
 		// <input class="btn-clean" item="skill-value" title="SKILL-TITLE" category="CATEGORY" type="number" value="SKILL-VALUE"/>
-		let dom_skill_value = document.createElement('input');
-			dom_skill_value.classList.add('btn-clean');
-			dom_skill_value.setAttribute('item', 'skill-value');
-			dom_skill_value.setAttribute('title', skill.title);
-			dom_skill_value.setAttribute('category', category);
-			dom_skill_value.setAttribute('type', 'number');
-			dom_skill_value.value = skill.value;
+		let dom_skill_value = this._createSimpleElement('input', 'btn-clean', [['item', 'skill-value'],['title', skill.title],['category', category],['type','number'],['value', skill.value]]);
 
-		dom_content_value_sep.appendChild(dom_skill_value);
-		dom_content_value_sep.appendChild(dom_skill_setting_decrease);
-		dom_content_value_sep.appendChild(dom_skill_setting_increase);
+		dom_content_value_sep = this._appendChild_loop(dom_content_value_sep, [dom_skill_value, dom_skill_setting_decrease, dom_skill_setting_increase]);
+
 		// END ACCORDION CONTENT
 
 		// START ACCORDION
-		dom_content_inner.appendChild(dom_content_title_sep);
-		dom_content_inner.appendChild(dom_content_value_sep);
+		dom_content_inner = this._appendChild_loop(dom_content_inner, [dom_content_title_sep, dom_content_value_sep, dom_skill_settings_wrapper]);
 		// END ACCORDION
 		// END ACCORDION DECLARATION
 
@@ -685,39 +474,35 @@ class CHARACTER {
 		if(category == 'magic') {
 			// START MAGIC ACCORDION DECLARATION
 			// <div submodule="accordion_inner" sub_acc=true>
-			let inner_acc = document.createElement('div');
-				inner_acc.setAttribute('submodule', 'accordion_inner');
-				inner_acc.setAttribute('sub_acc', true);
+			let inner_acc = this._createSimpleElement('div', '', [['submodule', 'accordion_inner'], ['sub_acc', true]]);
+
 			// <div class="flex">
-			let inner_acc_main = document.createElement('div');
-				inner_acc_main.classList.add('flex');
+			let inner_acc_main = this._createSimpleElement('div', 'flex');
+			
 			// <div class="element">
-			let inner_acc_element = document.createElement('div');
-				inner_acc_element.classList.add('element');
+			let inner_acc_element = this._createSimpleElement('div', 'element');
+			
 			// <div task="accordion_title" class="sub-title">
-			let inner_acc_title = document.createElement('div');
-				inner_acc_title.setAttribute('task', 'accordion_title');
-				inner_acc_title.classList.add('sub-title');
+			let inner_acc_title = this._createSimpleElement('div', 'sub-title', [['task', 'accordion_title']])
+
 			// <div task="accordion_content">
-			let inner_acc_content = document.createElement('div');
-				inner_acc_content.setAttribute('task', 'accordion_content');
+			let inner_acc_content = this._createSimpleElement('div', '', [['task', 'accordion_content']])
+
 			// END MAGIC ACCORDION DECLARATION
 
 			//START MAGIC CONTENT
 			// <div class="flex">
-			let m_content = document.createElement('div');
-				m_content.classList.add('flex');
+			let m_content = this._createSimpleElement('div', 'flex');
 			
 			//START MAGIC DESCRIPTION
 			// <div class="element">
-			let m_content_element = document.createElement('div');
-				m_content_element.classList.add('element');
+			let m_content_element = this._createSimpleElement('div', 'element');
+			
 			// <div class="wrap">
-			let m_content_wrap = document.createElement('div');
-				m_content_wrap.classList.add('wrap');
+			let m_content_wrap = this._createSimpleElement('div', 'wrap');
+			
 			// <input type="text" name="magic_description"/>
-			let m_content_description = document.createElement('textarea');
-				m_content_description.setAttribute('name', 'magic_description');
+			let m_content_description = this._createSimpleElement('div', '', [['name', 'magic_description']]);
 
 			m_content_wrap.appendChild(m_content_description);
 			m_content_element.appendChild(m_content_wrap);
@@ -725,53 +510,44 @@ class CHARACTER {
 
 			// START MAGIC VALUES
 			// <div class="element">
-			let m_content_element2 = document.createElement('div');
-				m_content_element2.classList.add('element');
+			// START MAGIC VALUES
+			// <div class="element">
+			let m_content_element2 = this._createSimpleElement('div', 'element');
+			
 			// <div class="flex">
-			let m_content_wrap2 = document.createElement('div');
-				m_content_wrap2.classList.add('flex');
+			let m_content_wrap2 = this._createSimpleElement('div', 'flex');
 			
 			// <div class="inner" task="magic-values">
-			let m_content_inner1 = document.createElement('div');
-				m_content_inner1.classList.add('inner');
-				m_content_inner1.setAttribute('task', 'magic-values');
+			let m_content_inner1 = this._createSimpleElement('div', 'inner', [['task', 'magic-values']]);
 			
 			// START MAGIC OPTIONS
 			// <div class="inner" task="magic-options">
-			let m_content_inner2 = document.createElement('div');
-				m_content_inner2.classList.add('inner');
-				m_content_inner2.setAttribute('task', 'magic-options');
-			// <div class="wrap">
-			let m_content_inner2_save = document.createElement('div');
-				m_content_inner2_save.classList.add('wrap');
-			// <button onclick="">SAVE</button
-			let m_content_inner2_save_btn = document.createElement('button');
-				m_content_inner2_save_btn.setAttribute('onclick', "_C._save('skill')");
-			let saveTXT = document.createTextNode('Save');
+			let m_content_inner2 = this._createSimpleElement('div', 'inner', [['task', 'magic-options']]);
 			
-			m_content_inner2_save_btn.appendChild(saveTXT);
+			// <div class="wrap">
+			let m_content_inner2_save = this._createSimpleElement('div', 'wrap');
+			
+			// <button onclick="">SAVE</button
+			let m_content_inner2_save_btn = this._createSimpleElement('button', '', [['onclick', '_C._save("skill")', 'Save']]);
+			
 			m_content_inner2_save.appendChild(m_content_inner2_save_btn);
-
 			m_content_inner2.appendChild(m_content_inner2_save);
 			// END MAGIC OPTIONS
 
-			m_content_wrap2.appendChild(m_content_inner1);
-			m_content_wrap2.appendChild(m_content_inner2);
+			m_content_wrap2 = this._appendChild_loop(m_content_wrap2, [m_content_inner1, m_content_inner2]);
 
 			m_content_element2.appendChild(m_content_wrap2);
 			//END MAGIC VALUES
 
-			m_content.appendChild(m_content_element)
-			m_content.appendChild(m_content_element2)
-
+			m_content = this._appendChild_loop(m_content, [m_content_element, m_content_element2]);
+			
 			inner_acc_content.appendChild(m_content);
 			// END MAGIC CONTENT
 
 			// START MAGIC ACCORDION
 			inner_acc_title.appendChild(dom_content_inner);
 
-			inner_acc_element.appendChild(inner_acc_title);
-			inner_acc_element.appendChild(inner_acc_content);
+			inner_acc_element = this._appendChild_loop(inner_acc_element, [inner_acc_title, inner_acc_content]);
 
 			inner_acc_main.appendChild(inner_acc_element);
 
@@ -785,6 +561,64 @@ class CHARACTER {
 
 		return return_dom;
 	}
+	//#
+	//# SETUP HELPERS
+	//#
+	_get_dom_settings_btn(task, disabled=false) {
+
+		let return_dom = this._createSimpleElement('div', 'settings-btn');
+		
+		if(disabled) {
+			return_dom.classList.add('disabled');
+		}
+		let dom_child = this._createSimpleElement('button', '', [['task', task]]);
+		
+		return_dom.appendChild(dom_child);
+
+		return return_dom;
+	}
+
+	_appendChild_loop(parent, children) {
+		for (let i = 0; i < children.length; i++) {
+			parent.appendChild(children[i]);
+		}
+		return parent;
+	}
+//[['submodule', 'accordion_inner'], ['sub_acc', true]]
+	_createSimpleElement(tag_name='div', class_name='', attributes='',text='', text_wrapper=''){
+		let element = document.createElement(tag_name);
+		if(class_name) {
+			if(typeof class_name == 'string') {
+				element.classList.add(class_name);
+			}else {
+				for (let i = 0; i < class_name.length; i++) {
+					element.classList.add(class_name[i]);
+				}
+			}
+		}
+		if(attributes) {
+			if(typeof attributes == 'object') {
+				for (let i = 0; i < attributes.length; i++) {
+					element.setAttribute(attributes[i][0], attributes[i][1]);
+				}
+			}
+		}
+		if(text) {
+			if(typeof text == 'string') {
+				let node = document.createTextNode(text);
+				if(text_wrapper) {
+					let text_wrap = document.createElement(text_wrapper);
+					text_wrap.appendChild(node);
+					element.appendChild(text_wrap);
+				}else {
+					element.appendChild(node);
+				}
+			}
+		}
+
+		return element;
+	}
+
 
 	//#########
 	//### SETUP ONCLICKS FUNCTIONS

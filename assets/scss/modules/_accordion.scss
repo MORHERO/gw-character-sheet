@@ -1,8 +1,8 @@
 [submodule=accordion] {
-	margin-bottom: 30px;
 	> .flex {
 		flex-wrap:nowrap;
 		flex-direction: column;
+		padding-top: 16px;
 		[task=skill-cat-add] {
 			background-color: $cl-main-black;
 			border-color: $cl-main-dark;
@@ -16,6 +16,7 @@
 	[task=accordion_title] {
 		font-weight: bold;
 		padding: 8px 0px;
+		margin-top: -16px;
 		background-color: $cl-main-black;
 		cursor: pointer;
 		justify-content: space-between;
@@ -38,7 +39,9 @@
 	[task=accordion_content] {
 		height: 0px;
 		overflow: hidden;
-		background-color: $cl-main-black-60;
+		opacity: 0;
+		background-color: $cl-main;
+		padding: 8px 12px;
 		button[task=skill-add] {
 			background-color: $cl-main;
 			&:hover {
@@ -50,6 +53,8 @@
 		}
 		&.active {
 			height: auto;
+			padding-bottom: 24px;
+			opacity: 1;
 		}
 	}
 	&.clean {

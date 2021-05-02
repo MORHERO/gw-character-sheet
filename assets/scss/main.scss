@@ -2,7 +2,7 @@
 
 @import "basic/tiny-slider";
 
-@import "basic/debug";
+//@import "basic/debug";
 
 /*-----|| fonts ||----------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------*/
@@ -173,6 +173,7 @@ textarea {
 		background-color: $cl-main;
 		border-color: $cl-main-dark;
 		color: $cl-black;
+		cursor:pointer;
 		&[task] {
 			&:after {
 				content:"";
@@ -198,13 +199,30 @@ textarea {
 				background-image: url(../media/icon/remove.svg);
 			}
 		}
+		&[task=increase] {
+			&:after {
+				background-image: url(../media/icon/plus.svg);
+			}
+		}
+		&[task=decrease] {
+			&:after {
+				background-image: url(../media/icon/minus.svg);
+			}
+		}
+		&:hover {
+			background-color: $cl-darkgrey;
+		}
 	}
 	&.disabled {
 		button {
+			cursor: normal;
 			&[task] {
 				&:after {
 					opacity: 0.4;
 				}
+			}
+			&:hover {
+				background-color: $cl-main;
 			}
 		}
 	}
