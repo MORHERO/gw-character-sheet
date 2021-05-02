@@ -164,6 +164,51 @@ textarea {
 	}
 }
 
+.settings-btn {
+	margin-right: 4px;
+	button {
+		position: relative;
+		height: 28px;
+		width: 28px;
+		background-color: $cl-main;
+		border-color: $cl-main-dark;
+		color: $cl-black;
+		&[task] {
+			&:after {
+				content:"";
+				position: absolute;
+				top:1px;
+				left:1px;
+				width: 24px;
+				height: 24px;
+			}
+		}
+		&[task=skill-add] {
+			&:after {
+				background-image: url(../media/icon/plus.svg);
+			}
+		}
+		&[task=skill-edit] {
+			&:after {
+				background-image: url(../media/icon/edit.svg);
+			}
+		}
+		&[task=skill-remove] {
+			&:after {
+				background-image: url(../media/icon/remove.svg);
+			}
+		}
+	}
+	&.disabled {
+		button {
+			&[task] {
+				&:after {
+					opacity: 0.4;
+				}
+			}
+		}
+	}
+}
 
 
 

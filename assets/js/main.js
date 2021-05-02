@@ -468,8 +468,8 @@ class CHARACTER {
 					dom_title_settings_add.classList.add('settings-btn');
 				let dom_title_settings_add_btn = document.createElement('button');
 					dom_title_settings_add_btn.setAttribute('task', 'skill-add');
-				let dom_title_settings_add_btn_content = document.createTextNode('+');
-				dom_title_settings_add_btn.appendChild(dom_title_settings_add_btn_content);
+				//let dom_title_settings_add_btn_content = document.createTextNode('+');
+				//dom_title_settings_add_btn.appendChild(dom_title_settings_add_btn_content);
 				dom_title_settings_add.appendChild(dom_title_settings_add_btn);
 
 				// edit skill setting
@@ -478,8 +478,8 @@ class CHARACTER {
 					dom_title_settings_edit.classList.add('disabled');
 				let dom_title_settings_edit_btn = document.createElement('button');
 					dom_title_settings_edit_btn.setAttribute('task', 'skill-edit');
-				let dom_title_settings_edit_btn_content = document.createTextNode('e');
-				dom_title_settings_edit_btn.appendChild(dom_title_settings_edit_btn_content);
+				//let dom_title_settings_edit_btn_content = document.createTextNode('e');
+				//dom_title_settings_edit_btn.appendChild(dom_title_settings_edit_btn_content);
 				dom_title_settings_edit.appendChild(dom_title_settings_edit_btn);
 
 				// remove skill setting
@@ -488,8 +488,8 @@ class CHARACTER {
 					dom_title_settings_remove.classList.add('disabled');
 				let dom_title_settings_remove_btn = document.createElement('button');
 					dom_title_settings_remove_btn.setAttribute('task', 'skill-remove');
-				let dom_title_settings_remove_btn_content = document.createTextNode('r');
-				dom_title_settings_remove_btn.appendChild(dom_title_settings_remove_btn_content);
+				//let dom_title_settings_remove_btn_content = document.createTextNode('r');
+				//dom_title_settings_remove_btn.appendChild(dom_title_settings_remove_btn_content);
 				dom_title_settings_remove.appendChild(dom_title_settings_remove_btn);
 
 				// combine settings wrap

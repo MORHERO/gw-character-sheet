@@ -28,21 +28,6 @@
 		}
 		>.flex {
 			margin-right: 8px;
-			.settings-btn {
-				margin-right: 4px;
-				button {
-					height: 28px;
-					width: 28px;
-					background-color: $cl-main;
-					border-color: $cl-main-dark;
-					color: $cl-black;
-				}
-				&.disabled {
-					button {
-						color: $cl-main-dark;
-					}
-				}
-			}
 		}
 
 		&:hover {
