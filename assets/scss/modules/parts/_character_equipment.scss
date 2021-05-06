@@ -34,8 +34,11 @@
 				font-size: $font-xl;
 				pointer-events: none;
 			}
+			>.flex {
+				justify-content: flex-end;
+			}
 		}
-		>.flex {
+		.content.flex {
 			justify-content: space-between;
 			background-color: $cl-main-dark;
 			padding: 8px 12px;
@@ -55,12 +58,13 @@
 			
 			>.flex {
 				flex-wrap: nowrap;
+				justify-content: space-between;
 			}
 			[item=money_amount] {
 				text-align: right;
 			}
 			span {
-				font-size: 0.6em;
+				font-size: $font-l;
 			}
 			p {
 				font-family: $font-tech;

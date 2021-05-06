@@ -153,6 +153,7 @@ textarea {
 	color:$cl-font;
 	font-size: $font-xs;
 	min-width: calc(100% - 12px);
+	min-height: 5.5em;
 	max-height: 400px;
 	padding: 4px;
 	resize: vertical;
@@ -189,7 +190,7 @@ textarea {
 				background-image: url(../media/icon/plus.svg);
 			}
 		}
-		&[icon=skill-edit] {
+		&[icon=skill-edit], &[icon=edit] {
 			&:after {
 				background-image: url(../media/icon/edit.svg);
 			}

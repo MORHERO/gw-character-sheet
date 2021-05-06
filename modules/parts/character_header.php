@@ -14,4 +14,8 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="settings-btn disabled">
+		<button icon="edit" task="main-edit" onclick=""></button>
+	</div>
 </div>
