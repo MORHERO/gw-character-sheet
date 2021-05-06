@@ -275,19 +275,6 @@ class CHARACTER {
 
 	_setup_onclick_overlays(that) {
 		
-		// SKILL ADD
-		let skill_add_save = this.main_parent.querySelector('button[task=save_new_skill]');
-
-		skill_add_save.addEventListener('click', function(e) {
-			let catid = skill_add_save.getAttribute('catid');
-			let skill_title = that.skill_overlay.querySelector('[name=skill_title]');
-			let skill_value = that.skill_overlay.querySelector('[name=skill_value]');
-
-			that._add_skill(catid, skill_title, skill_value);
-		});
-
-		// SKILL CATEGORY ADD
-
 		let overlays = that.main_parent.querySelectorAll('.overlay');
 		for (let i = 0; i < overlays.length; i++) {
 			overlays[i].addEventListener('click', function(e) {
@@ -366,7 +353,7 @@ class CHARACTER {
 				let skill = this._skills[t][cat].data;
 		
 				
-				for (let i = 0; i < this._skills[t][cat].data.length; i++) {console.log(skill[i].title);
+				for (let i = 0; i < this._skills[t][cat].data.length; i++) {
 					if( skill[i].title == tp.getAttribute('title') || skill[i].title == tp.getAttribute('icon')) {
 						if(typeof(task) == 'string') {
 
@@ -385,7 +372,8 @@ class CHARACTER {
 				}
 			}
 		}
-		this._save('skill')
+		this._save('skill');
+		_DOM.setup_skill_cat_point();
 		return;
 	}
 
@@ -412,6 +400,8 @@ class CHARACTER {
 
 		content_dom.insertBefore(new_skill_cat_dom, content_dom.lastChild);
 
+		_DOM._toggle_addSkillCat_overlay();
+
 		this._save('skill');
 
 		return;
@@ -431,6 +421,8 @@ class CHARACTER {
 
 		content_dom.insertBefore(new_skill_dom, content_dom.lastChild);
 
+		_DOM._toggle_addSkill_overlay();
+
 		this._save('skill');
 
 		return;
@@ -440,7 +432,7 @@ class CHARACTER {
 	//### REMOVE FUNCTIONS
 	//#########
 	remove_skill_cat(trigger) { // user triggert remove
-		this._toggle_removeSkillCat_overlay(trigger);
+		_DOM._toggle_removeSkillCat_overlay(trigger);
 
 		return;
 	}
@@ -463,14 +455,14 @@ class CHARACTER {
 		let skill_cat_dom = this.main_parent.querySelector('[catid="' + catid + '"]');
 		skill_cat_dom.remove();
 
-		this._toggle_removeSkillCat_overlay();
+		_DOM._toggle_removeSkillCat_overlay();
 
 		this._save('skill');
 
 		return;
 	}
 	remove_skill(trigger) {
-		this._toggle_removeSkill_overlay(trigger);
+		_DOM._toggle_removeSkill_overlay(trigger);
 
 		return;
 	}
@@ -495,7 +487,7 @@ class CHARACTER {
 		let skill_dom = this.main_parent.querySelector('[item=skill][skill-title='+skill_title+']');
 		skill_dom.remove();
 
-		this._toggle_removeSkill_overlay();
+		_DOM._toggle_removeSkill_overlay();
 
 		this._save('skill');
 

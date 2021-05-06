@@ -16,7 +16,7 @@
 		</div>
 
 		<div class="wrap">
-			<button class="" task="save_new_skill">Save</button>
+			<button class="" task="save_new_skill" onclick='_C._add_skill(this.getAttribute("catid"), _C.skill_overlay.querySelector("[name=skill_title]"), _C.skill_overlay.querySelector("[name=skill_value]"))'>Save</button>
 		</div>
 	</div>
 </div>

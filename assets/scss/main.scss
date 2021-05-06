@@ -210,8 +210,10 @@ textarea {
 		}
 	}
 	&.disabled {
+		cursor: default;
 		button {
 			cursor: default;
+			pointer-events: none;
 			&[icon] {
 				&:after {
 					opacity: 0.4;

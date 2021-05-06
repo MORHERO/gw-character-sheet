@@ -66,7 +66,14 @@ class DOM_MASTER {
 
 				let dom_title_settings_add = this._get_dom_settings_btn('skill-add');
 				let dom_title_settings_edit = this._get_dom_settings_btn('skill-edit', true);
-				let dom_title_settings_remove = this._get_dom_settings_btn('skill-cat-remove');
+
+				let dom_title_settings_remove = "";
+				if(x == 0 && t < 7) {
+					dom_title_settings_remove = this._get_dom_settings_btn('skill-cat-remove', true);
+				}else {
+					dom_title_settings_remove = this._get_dom_settings_btn('skill-cat-remove');
+				}
+				
 
 				// combine settings wrap
 
@@ -126,16 +133,51 @@ class DOM_MASTER {
 			
 			let sum = 0;
 			let amount = 0;
+			let boni_amount = 0;
+
+			let highest = 0;
 
 			for (let s = 0; s < skill_content.length; s++) {
 				sum = sum + parseInt(skill_content[s].value);
 				amount = amount + 1;
+				
+				if(highest < parseInt(skill_content[s].value)) {
+					highest = parseInt(skill_content[s].value);
+				}
+
+				if(skill_content[s].value <= 15) {
+					boni_amount += 1;
+				}else if(skill_content[s].value <= 30) {
+					boni_amount += 2;
+				}else if(skill_content[s].value <= 50) {
+					boni_amount += 3;
+				}else if(skill_content[s].value <= 75) {
+					boni_amount += 4;
+				}else if(skill_content[s].value <= 100) {
+					boni_amount += 5;
+				}else if(skill_content[s].value <= 150) {
+					boni_amount += 6;
+				}else if(skill_content[s].value <= 200) {
+					boni_amount += 7;
+				}else if(skill_content[s].value <= 250) {
+					boni_amount += 8;
+				}else if(skill_content[s].value <= 300) {
+					boni_amount += 9;
+				}else if(skill_content[s].value <= 400) {
+					boni_amount += 10;
+				}
 			}
-			let result = Math.round(sum / amount);
+			let max =  Math.round((highest*0.75 < amount*10)? highest*0.75 : amount*10);
+
+			let result = Math.round((sum / amount) + boni_amount);
+			if(max < result) {
+				result = max;
+			}
 
 			if(isNaN(result)) {
 				result = 0;
 			}
+
 			skill_titles[i].innerHTML = " (" + result + ")";
 		}
 		return;
@@ -323,21 +365,30 @@ class DOM_MASTER {
 	//#########
 	//### OVERLAY FUNCTIONS
 	//#########
-	_toggle_addSkillCat_overlay(trigger) {
-		let skill_cat_add_save = _C.main_parent.querySelector('button[task=save_new_skill_cat]');
+	_toggle_addSkillCat_overlay(trigger="") {
+		if(trigger) {
+			let skill_cat_add_save = _C.main_parent.querySelector('button[task=save_new_skill_cat]');
 
-		let parent = trigger.parentElement.parentElement;
-		_C.skill_cat_overlay.classList.add('active');
-		skill_cat_add_save.setAttribute('typeid', parent.getAttribute('id'));
+			let parent = trigger.parentElement.parentElement;
+			_C.skill_cat_overlay.classList.add('active');
+			skill_cat_add_save.setAttribute('typeid', parent.getAttribute('id'));
+		}else {
+			_C.skill_cat_overlay.classList.remove('active');
+		}
 	}
 
 
-	_toggle_addSkill_overlay(trigger) {
-		let cat_parent = trigger.parentElement.parentElement.parentElement.parentElement;
-		let skill_add_save = _C.main_parent.querySelector('button[task=save_new_skill]');
+	_toggle_addSkill_overlay(trigger="") {
+		if(trigger) {
+			let cat_parent = trigger.parentElement.parentElement.parentElement.parentElement;
+			let skill_add_save = _C.main_parent.querySelector('button[task=save_new_skill]');
 
-		_C.skill_overlay.classList.add('active');
-		skill_add_save.setAttribute('catid', cat_parent.getAttribute('catid'));
+			_C.skill_overlay.classList.add('active');
+			skill_add_save.setAttribute('catid', cat_parent.getAttribute('catid'));
+
+		}else {
+			_C.skill_overlay.classList.remove('active');
+		}
 	}
 
 	_toggle_updateXP_overlay(trigger) {
