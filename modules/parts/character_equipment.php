@@ -121,8 +121,8 @@
 				<div class="heading flex">
 					<p>Geld</p>
 					<div class="flex">
-						<div class="settings-btn disabled">
-							<button icon="add" onclick=""></button>
+						<div class="settings-btn">
+							<button icon="edit" onclick="_DOM._toggle_updateMoney_overlay()"></button>
 						</div>
 					</div>
 				</div>

@@ -219,13 +219,15 @@ class CHARACTER {
 		this.skill_overlay = this.main_parent.querySelector('.overlay[task=add_skill]');
 		this.skill_cat_overlay = this.main_parent.querySelector('.overlay[task=add_skill_cat]');
 
-		// Setup doms
-		//_DOM.setup_header();
-		//_DOM.setup_attributes();
-		//_DOM.setup_skills();
+		// DEBUG: FOR ALREADY CREATED CHARACTERS
+		// TODO: REMOVE IF ALL CHARS HAVE INIT MONEY
+		//console.log(this._money);
+		if(typeof(this._money.bank[0]) == "undefined") {
+			console.log("init money");
+			this._money = {bank:[0,0,0,0,0], mobile:[0,0,0,0,0]};
+			this._save('money');
+		}
 
-		// Setup onlicks
-		//this._setup_onclicks();
 	}
 
 	//#########
@@ -335,7 +337,6 @@ class CHARACTER {
 		}
 	}
 
-
 	update_skill(task, target) {
 		// TODO BUGFIX: ALL THE SAME NAMED SKILLS WILL BE SET THE SAME VALUE
 		// TODO: FEATURE SAVE DIFFERENT VALUES ( MAGIC -> descr, damage, etc.)
@@ -374,6 +375,53 @@ class CHARACTER {
 		}
 		this._save('skill');
 		_DOM.setup_skill_cat_point();
+		return;
+	}
+
+	update_money(type) {
+		let money_main_inputs = this.main_parent.querySelectorAll('[overlay=update_money] [item=money_main] [item=money_amount] input');
+		let money_bank_inputs = this.main_parent.querySelectorAll('[overlay=update_money] [item=money_bank] [item=money_amount] input');
+
+		let money_main_displays = this.main_parent.querySelectorAll('#money_content [item=money_main] [item=money_amount] span');
+		let money_bank_displays = this.main_parent.querySelectorAll('#money_content [item=money_bank] [item=money_amount] span');
+
+		console.log(type);
+
+		if(type=="add") {
+			for (let i = 0; i < money_main_inputs.length; i++) {
+				if(money_main_inputs[i].value) {
+					this._money.mobile[i] += parseInt(money_main_inputs[i].value);
+				}
+				if(money_bank_inputs[i].value) {
+					this._money.bank[i] += parseInt(money_bank_inputs[i].value);
+				}
+			}
+		}else if(type=="remove") {
+			for (let i = 0; i < money_main_inputs.length; i++) {
+				if(money_main_inputs[i].value) {
+					this._money.mobile[i] -= parseInt(money_main_inputs[i].value);
+				}
+				if(money_bank_inputs[i].value) {
+					this._money.bank[i] -= parseInt(money_bank_inputs[i].value);
+				}
+			}
+		}else if(type=="switch") {
+
+			for (let i = 0; i < money_main_inputs.length; i++) {
+				if(money_main_inputs[i].value) {
+					this._money.mobile[i] -= parseInt(money_main_inputs[i].value);
+					this._money.bank[i] += parseInt(money_main_inputs[i].value);
+				}
+				if(money_bank_inputs[i].value) {
+					this._money.bank[i] -= parseInt(money_bank_inputs[i].value);
+					this._money.mobile[i] += parseInt(money_bank_inputs[i].value);
+				}
+			}
+
+		}
+
+		_DOM.setup_money();
+		this._save('money');
 		return;
 	}
 
@@ -504,6 +552,8 @@ class CHARACTER {
 			data = this._get_attribute_savedata();
 		}else if(cat == 'skill') {
 			data = this._get_skill_savedata();
+		}else if(cat == 'money') {
+			data = this._get_money_savedata();
 		}else{
 			data = this._create_savedata(cat, content);
 		}
@@ -536,10 +586,18 @@ class CHARACTER {
 
 		return data;
 	}
+	_get_money_savedata() {
+		let money_json = JSON.stringify(this._money);
+
+		let data = "money = '"+ money_json +"'";
+
+		return data;
+	}
 	_get_full_character_data() {
 		//TODO
 		return;
 	}
+
 
 
 	_create_savedata (table, content){

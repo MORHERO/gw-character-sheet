@@ -1,6 +1,7 @@
 class DOM_MASTER {
 	constructor() {
-
+		this.money_main_displays = document.querySelectorAll('#money_content [item=money_main] [item=money_amount] span');
+		this.money_bank_displays = document.querySelectorAll('#money_content [item=money_bank] [item=money_amount] span');
 
 	}
 
@@ -9,6 +10,7 @@ class DOM_MASTER {
 		this.setup_attributes();
 		this.setup_skills();
 
+		this.setup_money();
 		this.setup_note_field();
 		_C._setup_onclicks();
 	}
@@ -357,6 +359,22 @@ class DOM_MASTER {
 		// TODO
 	}
 
+	setup_money() {
+
+		for (let i = 0; i < this.money_main_displays.length; i++) {
+			this.money_main_displays[i].innerHTML = _C._money.mobile[i];
+			this.money_bank_displays[i].innerHTML = _C._money.bank[i];
+		}
+
+		// reset inputs
+		let inputs = _C.main_parent.querySelectorAll('[overlay=update_money] [item=money_amount] input');
+		for (let i = 0; i < inputs.length; i++) {
+			inputs[i].value = "";
+		}
+
+		return;
+	}
+
 	setup_note_field() {
 		let elem = _C.main_parent.querySelector('[item=base_notes]');
 		elem.innerHTML = _C._notes;
@@ -415,6 +433,11 @@ class DOM_MASTER {
 			btn.setAttribute('skill-title', trigger.parentElement.parentElement.parentElement.getAttribute('skill-title'));
 		}
 		return;
+	}
+	_toggle_updateMoney_overlay(trigger="") {
+		let overlay = _C.main_parent.querySelector('[overlay=update_money]');
+
+		overlay.classList.toggle('active');
 	}
 
 	//#
