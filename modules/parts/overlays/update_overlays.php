@@ -73,7 +73,8 @@
 				</div>
 				<div class="input-wrap">
 					<p>Erfahrungspunkte:</p>
-					<p class="add">Hinzufügen: <input type="number" item="add_xp" disabled/></p>
+					<p class="add">Hinzufügen: <input type="number" item="add_xp"/></p>
+					<p class="remove">Entfernen: <input type="number" item="remove_xp"/></p>
 					<p>Gesamt: <span item="xp_total">/</span></p>
 				</div>
 			</div>

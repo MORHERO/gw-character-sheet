@@ -106,8 +106,11 @@ function setup_character_data() {
 	character_full['skills_fight'] = JSON.parse(character_full['skills_fight']);
 	character_full['skills_magic'] = JSON.parse(character_full['skills_magic']);
 	character_full['skills_main'] = JSON.parse(character_full['skills_main']);
-
-	character_full['extra_notes'] = decodeURIComponent(JSON.parse(character_full['extra_notes']));
+	try {
+		character_full['extra_notes'] = decodeURIComponent(JSON.parse(character_full['extra_notes']));
+	} catch {
+		console.log('extra_notes is no json');
+	}
 }
 function character_loaded() {
 	setup_accordions();
@@ -185,16 +188,7 @@ class CHARACTER {
 			'value':karma,
 			'element': main_parent.querySelector('[item=base_karma]')
 		};
-		this._xp = {
-			'total':{
-				'value':xp.total,
-				'element': main_parent.querySelector('[item=base_xp_total]')
-			},
-			'used':{
-				'value':xp.used,
-				'element': main_parent.querySelector('[item=base_xp_used]')
-			}
-		};
+		this._xp = xp;
 		this._level = {
 			'value':level,
 			'element': main_parent.querySelector('[item=base_level]')
@@ -239,11 +233,14 @@ class CHARACTER {
 		// DEBUG: FOR ALREADY CREATED CHARACTERS
 		// TODO: REMOVE IF ALL CHARS HAVE INIT MONEY
 		//console.log(this._money);
-		if(typeof(this._money.bank[0]) == "undefined") {
-			console.log("init money");
-			this._money = {bank:[0,0,0,0,0], mobile:[0,0,0,0,0]};
-			this._save('money');
-		}
+		try {
+			if(typeof(this._money.bank[0]) == "undefined") {
+				console.log("init money");
+				this._money = {bank:[0,0,0,0,0], mobile:[0,0,0,0,0]};
+				this._save('money', this._money);
+			}
+		}catch{this._money = {bank:[0,0,0,0,0], mobile:[0,0,0,0,0]};
+				this._save('money', this._money);}
 
 	}
 
@@ -260,7 +257,7 @@ class CHARACTER {
 		let notes_elem = this.main_parent.querySelector('[item=base_notes]');
 		notes_elem.addEventListener('blur', function(e) {
 			that._notes = this.value;
-			that._save("extra_notes", that._notes);
+			that._save("extra_notes", that._notes, true);
 		});
 	}
 
@@ -390,13 +387,52 @@ class CHARACTER {
 						if(typeof(task) == 'string') {
 
 							if(task == 'increase') {
-								this._skills[t][cat].data[i].value = skill[i].value + 1;
+								let xp_cost = 0;
+								let new_value = skill[i].value + 1;
+
+								if(this.main_parent.querySelector('[item=xp_auto_cost]').checked) {
+									xp_cost = RULE.get_xp_cost('skill', skill[i].value, new_value);
+								}
+
+								if(xp_cost <= (this._xp.total - this._xp.used) ){
+									this._skills[t][cat].data[i].value = new_value;
+									this.update_xp(xp_cost);
+								}else {
+									tp.value = this._skills[t][cat].data[i].value;
+								}
+								
 							}else if(task == 'decrease') {
-								this._skills[t][cat].data[i].value = skill[i].value - 1;
+								let xp_cost = 0;
+								let new_value = skill[i].value - 1;
+
+								if(this.main_parent.querySelector('[item=xp_auto_cost]').checked) {
+									xp_cost = RULE.get_xp_cost('skill', skill[i].value, new_value);
+								}
+
+								if(xp_cost <= (this._xp.total - this._xp.used)){
+									this._skills[t][cat].data[i].value = new_value;
+									this.update_xp(xp_cost);
+								}else {
+									tp.value = this._skills[t][cat].data[i].value;
+								}
+								
 							}
 
 						}else if(typeof(task) == 'number') {
-							this._skills[t][cat].data[i].value = task;
+							let xp_cost = 0;
+								let new_value = task;
+
+								if(this.main_parent.querySelector('[item=xp_auto_cost]').checked) {
+									xp_cost = RULE.get_xp_cost('skill', skill[i].value, new_value);
+								}
+
+							if(xp_cost <= (this._xp.total - this._xp.used)){
+								this._skills[t][cat].data[i].value = new_value;
+								this.update_xp(xp_cost);
+							}else {
+								tp.value = this._skills[t][cat].data[i].value;
+							}
+							
 						}
 						tp.value = this._skills[t][cat].data[i].value;
 					}
@@ -415,8 +451,6 @@ class CHARACTER {
 
 		let money_main_displays = this.main_parent.querySelectorAll('#money_content [item=money_main] [item=money_amount] span');
 		let money_bank_displays = this.main_parent.querySelectorAll('#money_content [item=money_bank] [item=money_amount] span');
-
-		console.log(type);
 
 		if(type=="add") {
 			for (let i = 0; i < money_main_inputs.length; i++) {
@@ -471,7 +505,8 @@ class CHARACTER {
 		let dom_rank =			overlay.querySelector('[item=rank]');
 		let dom_reputation =	overlay.querySelector('[item=reputation]');
 		let dom_karma =			overlay.querySelector('[item=karma]');
-		let dom_xp =			overlay.querySelector('[item=add_xp]');
+		let dom_xp_add =		overlay.querySelector('[item=add_xp]');
+		let dom_xp_remove =		overlay.querySelector('[item=remove_xp]');
 
 		let save_datas = [];
 
@@ -537,16 +572,31 @@ class CHARACTER {
 			this._karma.value = dom_karma.value;
 			save_datas.push(this._create_savedata('base_karma', parseInt(this._karma.value)));
 		}
-		// XP
-		// TODO
-		if(dom_xp.value != this._xp.total.value) {
-			//this._xp.total.value = dom_xp.value;
-			//save_datas.push(this._create_savedata('base_xp', this._xp.total.value));
+		// XP ADD
+		if(dom_xp_add.value) {
+			this._xp.total += parseInt(dom_xp_add.value);
+			save_datas.push(this._create_savedata('base_xp', this._xp));
+			this.update_xp();
+		}
+		// XP REMOVE
+		if(dom_xp_remove.value) {
+			this._xp.total -= parseInt(dom_xp_remove.value);
+			save_datas.push(this._create_savedata('base_xp', this._xp));
+			this.update_xp();
 		}
 
 		if(save_datas[0]) {
 			this._save(save_datas);
 		}
+	}
+
+	update_xp(xp="") {
+		if(xp){
+			this._xp.used += xp;
+		}
+		this._save('base_xp', this._xp);
+		_DOM.setup_xp();
+		return;
 	}
 
 	//#########
@@ -682,12 +732,10 @@ class CHARACTER {
 			data = this._create_savedata(cat, content, encoded);
 		}
 
-		console.log(data);
-
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				console.log(this.responseText);
+				//console.log(this.responseText);
 			}
 		};
 		xhttp.open("GET", './modules/get_character.php?uid='+ this._uid +'&task=save_character_by_uid&data='+ data, true);

@@ -90,5 +90,69 @@ class RULES {
 
 		return value;
 	}
+
+
+	get_xp_cost(task, start_value, end_value) {
+		let cost = 0;
+
+		let direction = (end_value > start_value)? 1 : 0;
+		let diff = (direction)? (end_value - start_value) : (start_value - end_value);
+		let check_val = (direction)? end_value : start_value;
+
+		for (let i = 0; i < diff; i++) {
+			if(task == 'skill') {
+				switch(true) {
+					case (check_val <= 60):
+						cost += 1;
+						break;
+					case (check_val <= 80):
+						cost += 2;
+						break;
+					case (check_val <= 90):
+						cost += 4;
+						break;
+					case (check_val <= 100):
+						cost += 8;
+						break;
+					case (check_val <= 110):
+						cost += 16;
+						break;
+					case (check_val <= 115):
+						cost += 32;
+						break;
+					case (check_val <= 120):
+						cost += 64;
+						break;
+					case (check_val <= 125):
+						cost += 128;
+						break;
+					case (check_val <= 130):
+						cost += 256;
+						break;
+					case (check_val <= 135):
+						cost += 512;
+						break;
+					case (check_val <= 140):
+						cost += 1024;
+						break;
+					case (check_val <= 145):
+						cost += 2048;
+						break;
+					case (check_val > 145):
+						cost += 4096;
+						break;
+					default:
+						cost += 0;
+				}
+			}else if(task == 'attribute') {
+
+			}
+		}
+
+		if(!direction) {
+			cost = -Math.abs(cost);
+		}
+		return cost;
+	}
 }
 const RULE = new RULES();

@@ -10,6 +10,7 @@ class DOM_MASTER {
 		this.setup_attributes();
 		this.setup_skills();
 
+		this.setup_xp(true);
 		this.setup_money();
 		this.setup_note_field();
 		this.setup_mainInfo_overlay();
@@ -362,6 +363,25 @@ class DOM_MASTER {
 		// TODO
 	}
 
+	setup_xp(first_load=false) {
+		let total_dom = _C.main_parent.querySelector('[item=base_xp_total]');
+		let used_dom = _C.main_parent.querySelector('[item=base_xp_used]');
+
+		if(!first_load){
+			let overlay = _C.main_parent.querySelector('[overlay=update_header]');
+			let overlay_total_dom = overlay.querySelector('[item=xp_total]');
+			let overlay_input_add_dom = overlay.querySelector('[item=add_xp]');
+			let overlay_input_remove_dom = overlay.querySelector('[item=remove_xp]');
+
+			overlay_total_dom.innerHTML = _C._xp.total;
+			overlay_input_add_dom.value = "";
+			overlay_input_remove_dom.value = "";
+		}
+
+		total_dom.innerHTML = _C._xp.total;
+		used_dom.innerHTML = (_C._xp.total - _C._xp.used);
+	}
+
 	setup_money() {
 
 		for (let i = 0; i < this.money_main_displays.length; i++) {
@@ -413,7 +433,7 @@ class DOM_MASTER {
 		dom_rank.value =		_C._rank.value;
 		dom_reputation.value =	_C._reputation.value;
 		dom_karma.value =		_C._karma.value;
-		dom_xp.value =			_C._xp.total.value;
+		dom_xp.innerHTML =		_C._xp.total;
 
 		return;
 	}

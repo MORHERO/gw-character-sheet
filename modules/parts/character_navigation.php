@@ -29,13 +29,14 @@
 
 		<div class="nav-elem end-tab">
 			<div class="flex">
+				<input type="checkbox" item="xp_auto_cost" checked>
 				<p class="title">EP:</p>
 				<div>
 					<div class="flex">
-						<p class="text">Gesamt:</p><p item="xp-total">/</p>
+						<p class="text">Gesamt:</p><p item="base_xp_total">/</p>
 					</div>
 					<div class="flex">
-						<p class="text">Verfügbar:</p><p item="xp-available">/</p>
+						<p class="text">Verfügbar:</p><p item="base_xp_used">/</p>
 					</div>
 				</div>
 			</div>
