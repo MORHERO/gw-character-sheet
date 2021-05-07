@@ -145,7 +145,43 @@ class RULES {
 						cost += 0;
 				}
 			}else if(task == 'attribute') {
-
+				switch(true) {
+					case (check_val <= 10):
+						cost += 10;
+						break;
+					case (check_val <= 15):
+						cost += 20;
+						break;
+					case (check_val <= 20):
+						cost += 40;
+						break;
+					case (check_val <= 22):
+						cost += 80;
+						break;
+					case (check_val <= 24):
+						cost += 160;
+						break;
+					case (check_val == 25):
+						cost += 320;
+						break;
+					case (check_val == 26):
+						cost += 640;
+						break;
+					case (check_val <= 27):
+						cost += 1280;
+						break;
+					case (check_val <= 28):
+						cost += 2560;
+						break;
+					case (check_val <= 29):
+						cost += 5120;
+						break;
+					case (check_val >= 30):
+						cost += 10240;
+						break;
+					default:
+						cost += 0;
+				}
 			}
 		}
 

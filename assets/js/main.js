@@ -330,10 +330,21 @@ class CHARACTER {
 				if( attr[i].type == target.getAttribute('item') ) {
 
 					if(typeof(task) == 'number') {
-						attr[i].value = task;
-					
-						this.update_attribute_dice(target);
 
+						let xp_cost = 0;
+						let new_value = task;
+
+						if(this.main_parent.querySelector('[item=xp_auto_cost]').checked) {
+							xp_cost = RULE.get_xp_cost('attribute', attr[i].value, new_value);
+						}
+
+						if(xp_cost <= (this._xp.total - this._xp.used) ){
+							attr[i].value = new_value;
+							this.update_xp(xp_cost);
+							this.update_attribute_dice(target);
+						}else {
+							target.value = attr[i].value;
+						}
 					}
 				}
 
