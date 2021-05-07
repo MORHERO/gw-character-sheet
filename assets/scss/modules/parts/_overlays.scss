@@ -24,7 +24,7 @@
 		padding: 1em 2em;
 		border:2px solid $cl-grey;
 		>.flex {
-			flex-wrap:no-wrap;
+			flex-wrap:nowrap;
 			justify-content:space-between;
 			.wrap {
 				text-align: left;
@@ -51,5 +51,19 @@
 			}
 		}
 	}
-	
+	&[overlay=update_header] {
+		>.inner {
+			>.flex {
+			}
+			.wrap {
+				text-align: right;
+			}
+		}
+		.element {
+			.input-wrap {
+				text-align: left;
+				font-weight: normal;
+			}
+		}
+	}
 }

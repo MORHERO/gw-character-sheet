@@ -57,5 +57,38 @@ class RULES {
 		}
 		return dice;
 	}
+	get_calculated_attribute(type) {
+		let value = 0;
+
+		switch(type) {
+			case "size":
+				value = Math.round(_C._height.value / 25);
+				break;
+			case "speed":
+				value = Math.round(parseInt(_C.attribute.parent.querySelector('[task=attribute-main][item=dexterity]').value) + parseInt(_C.attribute.parent.querySelector('[task=attribute-main][item=size]').value));
+				break;
+			case "initative":
+				value = Math.round(10 - parseInt(_C.attribute.parent.querySelector('[task=attribute-main][item=intuition]').value));
+				break;
+			case "health":
+				value = 0;// 90 LP + Rassenbonus + KON + STÄ + Altersbonus + GK
+				break;
+			case "mana":
+				value = 0;//90 FK + Rassenbonus + MYS + Umgebungsbonus
+				break;
+			case "defense":
+				value = 0;//Beweglichkeit (BEW) + Stärke (STÄ) + Staturbonus + Rassenbonus
+				break;
+			case "mental_willpower":
+				value = Math.round(parseInt(_C.attribute.parent.querySelector('[task=attribute-main][item=intelligence]').value) + parseInt(_C.attribute.parent.querySelector('[task=attribute-main][item=willpower]').value));
+				break;
+			case "body_willpower":
+				value = Math.round(parseInt(_C.attribute.parent.querySelector('[task=attribute-main][item=constitution]').value) + parseInt(_C.attribute.parent.querySelector('[task=attribute-main][item=willpower]').value));
+				break;
+			default:
+		}
+
+		return value;
+	}
 }
 const RULE = new RULES();

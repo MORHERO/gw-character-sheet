@@ -83,6 +83,23 @@ setup_character_navigation();
 
 // BASE CONTENT SETUP
 function setup_character_data() {
+		
+	try {
+		character_full['base_name_main'] = JSON.parse(character_full['base_name_main']);
+	} catch {
+		console.log('base_name_main is no json');
+	}
+	try {
+		character_full['base_name_nick'] = JSON.parse(character_full['base_name_nick']);
+	} catch {
+		console.log('base_name_nick is no json');
+	}
+	try {
+		character_full['base_name_hidden'] = JSON.parse(character_full['base_name_hidden']);
+	} catch {
+		console.log('base_name_hidden is no json');
+	}
+
 	character_full['attributes'] = JSON.parse(character_full['attributes']);
 	character_full['base_xp'] = JSON.parse(character_full['base_xp']);
 	character_full['money'] = JSON.parse(character_full['money']);
@@ -325,7 +342,7 @@ class CHARACTER {
 
 			}
 		}
-
+		this.update_calc_attributes();
 		this._save('attribute');
 	}
 	update_attribute_dice(target) {
@@ -335,6 +352,20 @@ class CHARACTER {
 		if(dice_dom) {
 			dice_dom.innerHTML = RULE.get_attribute_dice(target.value);
 		}
+		return;
+	}
+	update_calc_attributes() {
+		// Size class
+		// TODO ADD LAST THREE
+		this.attribute.parent.querySelector('[task=attribute-main][item=size]').value = RULE.get_calculated_attribute('size');
+		this.attribute.parent.querySelector('[task=attribute-main][item=speed]').value = RULE.get_calculated_attribute('speed');
+		this.attribute.parent.querySelector('[task=attribute-main][item=initative]').value = RULE.get_calculated_attribute('initative');
+		//this.attribute.parent.querySelector('[task=attribute-main][item=health]').value = RULE.get_calculated_attribute('health');
+		//this.attribute.parent.querySelector('[task=attribute-main][item=mana]').value = RULE.get_calculated_attribute('mana');
+		//this.attribute.parent.querySelector('[task=attribute-main][item=defense]').value = RULE.get_calculated_attribute('defense');
+		this.attribute.parent.querySelector('[task=attribute-main][item=mental_willpower]').value = RULE.get_calculated_attribute('mental_willpower');
+		this.attribute.parent.querySelector('[task=attribute-main][item=body_willpower]').value = RULE.get_calculated_attribute('body_willpower');
+		return;
 	}
 
 	update_skill(task, target) {
@@ -421,8 +452,101 @@ class CHARACTER {
 		}
 
 		_DOM.setup_money();
-		this._save('money');
+		this._save('money', this._money);
 		return;
+	}
+
+	update_main_info() {
+		let overlay = _C.main_parent.querySelector('[overlay=update_header]');
+
+		let dom_name_main =		overlay.querySelector('[item=name_main]');
+		let dom_name_nick =		overlay.querySelector('[item=name_nick]');
+		let dom_name_hidden =	overlay.querySelector('[item=name_hidden]');
+		let dom_race =			overlay.querySelector('[item=race]');
+		let dom_gender =		overlay.querySelector('[item=gender]');
+		let dom_age =			overlay.querySelector('[item=age]');
+		let dom_height =		overlay.querySelector('[item=height]');
+		let dom_weight =		overlay.querySelector('[item=weight]');
+		let dom_figure =		overlay.querySelector('[item=figure]');
+		let dom_rank =			overlay.querySelector('[item=rank]');
+		let dom_reputation =	overlay.querySelector('[item=reputation]');
+		let dom_karma =			overlay.querySelector('[item=karma]');
+		let dom_xp =			overlay.querySelector('[item=add_xp]');
+
+		let save_datas = [];
+
+		// NAME MAIN
+		if(dom_name_main.value != this._name.main.value) {
+			this._name.main.value = dom_name_main.value;
+			save_datas.push(this._create_savedata('base_name_main', this._name.main.value));
+		}
+		// NAME NICK
+		if(dom_name_nick.value != this._name.nick.value) {
+			this._name.nick.value = dom_name_nick.value;
+			save_datas.push(this._create_savedata('base_name_nick', this._name.nick.value));
+		}
+		// NAME HIDDEN
+		if(dom_name_hidden.value != this._name.hidden.value) {
+			this._name.hidden.value = dom_name_hidden.value;
+			save_datas.push(this._create_savedata('base_name_hidden', this._name.hidden.value));
+		}
+		// RACE
+		// TODO
+		if(dom_race.value != this._race.id) {
+			//this._race.id = dom_race.value;
+			//save_datas.push(this._create_savedata('base_race_id', parseInt(this._race.id)));
+		}
+		// GENDER
+		// TODO
+		if(dom_gender.value != this._gender.value) {
+			//this._gender.value = dom_gender.value;
+			//save_datas.push(this._create_savedata('base_gender', this._gender.value));
+		}
+		// AGE
+		if(dom_age.value != this._age.value) {
+			this._age.value = dom_age.value;
+			save_datas.push(this._create_savedata('base_age', parseInt(this._age.value)));
+		}
+		// HEIGHT
+		if(dom_height.value != this._height.value) {
+			this._height.value = dom_height.value;
+			save_datas.push(this._create_savedata('base_height', parseInt(this._height.value)));
+		}
+		// WEIGT
+		if(dom_weight.value != this._weight.value) {
+			this._weight.value = dom_weight.value;
+			save_datas.push(this._create_savedata('base_weight', parseInt(this._weight.value)));
+		}
+		// FIGURE
+		if(dom_figure.value != this._figure.id) {
+			//this._figure.id = dom_figure.value;
+			//save_datas.push(this._create_savedata('base_figure_id', parseInt(this._figure.id)));
+		}
+		// RANK
+		if(dom_rank.value != this._rank.value) {
+			this._rank.value = dom_rank.value;
+			save_datas.push(this._create_savedata('base_rank', parseInt(this._rank.value)));
+		}
+		// REPUTATION
+		if(dom_reputation.value != this._reputation.value) {
+			this._reputation.value = dom_reputation.value;
+			save_datas.push(this._create_savedata('base_reputation', parseInt(this._reputation.value)));
+		}
+		// KARMA
+		if(dom_karma.value != this._karma.value) {
+			this._karma.value = dom_karma.value;
+			save_datas.push(this._create_savedata('base_karma', parseInt(this._karma.value)));
+		}
+		// XP
+		// TODO
+		if(dom_xp.value != this._xp.total.value) {
+			//this._xp.total.value = dom_xp.value;
+			//save_datas.push(this._create_savedata('base_xp', this._xp.total.value));
+		}
+
+		if(save_datas[0]) {
+			this._save(save_datas);
+		}
 	}
 
 	//#########
@@ -545,23 +669,25 @@ class CHARACTER {
 	//#########
 	//### SAVE FUNCTIONS
 	//#########
-	_save(cat='', content='') {
+	_save(cat='', content='', encoded=false) {
 		
 		var data = '';
 		if(cat == 'attribute') {
 			data = this._get_attribute_savedata();
 		}else if(cat == 'skill') {
 			data = this._get_skill_savedata();
-		}else if(cat == 'money') {
-			data = this._get_money_savedata();
+		}else if(Array.isArray(cat)) {
+			data = this._split_savedata(cat);
 		}else{
-			data = this._create_savedata(cat, content);
+			data = this._create_savedata(cat, content, encoded);
 		}
+
+		console.log(data);
 
 		var xhttp = new XMLHttpRequest();
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				//console.log(this.responseText);
+				console.log(this.responseText);
 			}
 		};
 		xhttp.open("GET", './modules/get_character.php?uid='+ this._uid +'&task=save_character_by_uid&data='+ data, true);
@@ -586,10 +712,18 @@ class CHARACTER {
 
 		return data;
 	}
-	_get_money_savedata() {
-		let money_json = JSON.stringify(this._money);
 
-		let data = "money = '"+ money_json +"'";
+
+	_split_savedata(content) {
+		let data = "";
+
+		for (let i = 0; i < content.length; i++) {
+			data += content[i];
+
+			if(content[i+1]) {
+				data += ',';
+			}
+		}
 
 		return data;
 	}
@@ -600,9 +734,14 @@ class CHARACTER {
 
 
 
-	_create_savedata (table, content){
-		let data = ""+ table + " = '"+ encodeURIComponent(JSON.stringify(encodeURIComponent(content))) +"'";
-
+	_create_savedata (table, content, encoded=false){
+		let data = ""
+		if(encoded) {
+			data = ""+ table + " = '"+ encodeURIComponent(JSON.stringify(encodeURIComponent(content))) +"'";
+		}else {
+			data = ""+ table + " = '"+  JSON.stringify(content) +"'";
+		}
+		
 		return data;
 	}
 }

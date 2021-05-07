@@ -12,6 +12,7 @@ class DOM_MASTER {
 
 		this.setup_money();
 		this.setup_note_field();
+		this.setup_mainInfo_overlay();
 		_C._setup_onclicks();
 	}
 
@@ -41,6 +42,8 @@ class DOM_MASTER {
 				}
 			}
 		}
+
+		_C.update_calc_attributes();
 
 		return;
 	}
@@ -380,6 +383,41 @@ class DOM_MASTER {
 		elem.innerHTML = _C._notes;
 	}
 
+
+	setup_mainInfo_overlay() {
+		let overlay = _C.main_parent.querySelector('[overlay=update_header]');
+
+		let dom_name_main =		overlay.querySelector('[item=name_main]');
+		let dom_name_nick =		overlay.querySelector('[item=name_nick]');
+		let dom_name_hidden =	overlay.querySelector('[item=name_hidden]');
+		let dom_race =			overlay.querySelector('[item=race]');
+		let dom_gender =		overlay.querySelector('[item=gender]');
+		let dom_age =			overlay.querySelector('[item=age]');
+		let dom_height =		overlay.querySelector('[item=height]');
+		let dom_weight =		overlay.querySelector('[item=weight]');
+		let dom_figure =		overlay.querySelector('[item=figure]');
+		let dom_rank =			overlay.querySelector('[item=rank]');
+		let dom_reputation =	overlay.querySelector('[item=reputation]');
+		let dom_karma =			overlay.querySelector('[item=karma]');
+		let dom_xp =			overlay.querySelector('[item=xp_total]');
+
+		dom_name_main.value =	_C._name.main.value;
+		dom_name_nick.value =	_C._name.nick.value;
+		dom_name_hidden.value =	_C._name.hidden.value;
+		dom_race.value =		_C._race.id;
+		dom_gender.value =		_C._gender.value;
+		dom_age.value =			_C._age.value;
+		dom_height.value =		_C._height.value;
+		dom_weight.value =		_C._weight.value;
+		dom_figure.value =		_C._figure.id;
+		dom_rank.value =		_C._rank.value;
+		dom_reputation.value =	_C._reputation.value;
+		dom_karma.value =		_C._karma.value;
+		dom_xp.value =			_C._xp.total.value;
+
+		return;
+	}
+
 	//#########
 	//### OVERLAY FUNCTIONS
 	//#########
@@ -409,8 +447,9 @@ class DOM_MASTER {
 		}
 	}
 
-	_toggle_updateXP_overlay(trigger) {
-		console.log(trigger);
+	_toggle_mainInfo_overlay(trigger) {
+		let overlay = _C.main_parent.querySelector('[overlay=update_header]');
+		overlay.classList.toggle('active');
 	}
 
 	_toggle_removeSkillCat_overlay(trigger="") {

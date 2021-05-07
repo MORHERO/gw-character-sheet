@@ -1,5 +1,94 @@
+<!-- UPDATE CHARACTER HEADER INFO OVERLAY -->
+<div class="overlay flex" overlay="update_header">
+	<div class="inner">
+		<div class="flex">
+			<div class="element">
+				<div class="input-wrap">
+					<p>Name:</p>
+					<input type="text" item="name_main" required/>
+				</div>
+				<div class="input-wrap">
+					<p>Spitzname:</p>
+					<input type="text" item="name_nick"/>
+				</div>
+				<div class="input-wrap">
+					<p>Geheimer Name:</p>
+					<input type="text" item="name_hidden"/>
+				</div>
+				<div class="input-wrap">
+					<p>Rasse:</p>
+					<select item="race" required disabled>
+						<option value="" disabled selected>Bitte auswählen</option>
+						<option value="0">Test</option>
+						<option value="1">Placeholder</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="element">
+				<div class="input-wrap">
+					<p>Geschlecht:</p>
+					<select item="gender" required disabled>
+						<option value="" disabled selected>Bitte auswählen</option>
+						<option value="male">Männlich</option>
+						<option value="female">Weiblich</option>
+						<option value="diverse">Divers</option>
+					</select>
+				</div>
+				<div class="input-wrap">
+					<p>Alter:</p>
+					<input type="number" item="age" required/>
+				</div>
+				<div class="input-wrap">
+					<p>Größe:</p>
+					<input type="text" item="height" required/>
+				</div>
+				<div class="input-wrap">
+					<p>Gewicht:</p>
+					<input type="text" item="weight" required/>
+				</div>
+				<div class="input-wrap">
+					<p>Figur:</p>
+					<select item="figure" required disabled>
+						<option value="" disabled selected>Bitte auswählen</option>
+						<option value="0">Figur 1</option>
+						<option value="1">Figur 2</option>
+						<option value="2">Figur 3</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="element">
+				<div class="input-wrap">
+					<p>Rang:</p>
+					<input type="number" item="rank" required/>
+				</div>
+				<div class="input-wrap">
+					<p>Reputation:</p>
+					<input type="number" item="reputation" required/>
+				</div>
+				<div class="input-wrap">
+					<p>Karma:</p>
+					<input type="number" item="karma" required/>
+				</div>
+				<div class="input-wrap">
+					<p>Erfahrungspunkte:</p>
+					<p class="add">Hinzufügen: <input type="number" item="add_xp" disabled/></p>
+					<p>Gesamt: <span item="xp_total">/</span></p>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="wrap">
+			<button class="" onclick="_DOM._toggle_mainInfo_overlay(this)">Schließen</button>
+			<button class="" onclick="_C.update_main_info()">Speichern</button>
+		</div>
+	</div>
+</div>
+
 <!-- UPDATE MONEY OVERLAY -->
-<div class="overlay flex active" overlay="update_money">
+<div class="overlay flex" overlay="update_money">
 	<div class="inner">
 		<div class="flex">
 

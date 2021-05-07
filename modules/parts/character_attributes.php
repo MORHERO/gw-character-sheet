@@ -135,7 +135,7 @@
 								<p><?php echo($item['title_short']); ?></p>
 							</div>
 							<div class="value">
-								<input type="text" task="attribute-main" item="<?php echo($item['type']); ?>" value="0">
+								<input type="text" task="attribute-main" item="<?php echo($item['type']); ?>" value="0" disabled>
 							</div>
 							<div class="dice-preview" dice="false">
 								<p></p>

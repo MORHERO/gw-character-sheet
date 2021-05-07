@@ -15,7 +15,7 @@
 		</div>
 	</div>
 
-	<div class="settings-btn disabled">
-		<button icon="edit" task="main-edit" onclick=""></button>
+	<div class="settings-btn">
+		<button icon="edit" task="main-edit" onclick="_DOM._toggle_mainInfo_overlay(this)"></button>
 	</div>
 </div>
