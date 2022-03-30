@@ -77,7 +77,14 @@
 			}
 		}
 	}
-	
+	@media only screen and (max-width: 1080px) {
+		[task=accordion_title] {
+			padding: 8px 0px;
+			>p, span {
+				font-size: $font-l;
+			}
+		}
+	}
 }
 
 [submodule=accordion_inner] {
