@@ -2,11 +2,12 @@
 	>.flex {
 		flex-wrap: nowrap;
 		.main {
-			flex-basis: 75%;
+			flex-basis: 100%;
 			margin-right: 12px;
 		}
 		.sub {
-			flex-basis: 25%;
+			min-width: 250px;
+			width: 250px;
 		}
 	}
 	[item=equipment] {
@@ -21,6 +22,11 @@
 			&.info-section {
 				
 			}
+		}
+	}
+	@media only screen and (max-width: 760px) {
+		>.flex {
+			flex-wrap:wrap;
 		}
 	}
 }
@@ -81,5 +87,12 @@
 			padding-right: 2px;
 		}
 	}
-
+	@media only screen and (max-width: 1080px) {
+		.heading {
+			padding: 8px 0px;
+			>p {
+				font-size: $font-l;
+			}
+		}
+	}
 }
