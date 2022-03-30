@@ -160,8 +160,12 @@ textarea {
 }
 
 [module=character-sheet] {
+	max-width: calc(100vw - 80px);
 	>.flex {
 		flex-wrap: nowrap;
+	}
+	.main {
+		width: calc(100% - 182px);
 	}
 }
 
@@ -222,6 +226,22 @@ textarea {
 			&:hover {
 				background-color: $cl-main;
 			}
+		}
+	}
+}
+
+@media only screen and (max-width: 1080px) {
+	[module=character-sheet] {
+		max-width: calc(100vw - 40px); 
+	}
+}
+@media only screen and (max-width: 940px) {
+	[module=character-sheet] {
+		>.flex {
+			flex-direction:column;
+		}
+		.main {
+			width: 100%;
 		}
 	}
 }
