@@ -31,4 +31,32 @@
 			}
 		}
 	}
+	@media only screen and (max-width: 1080px) {
+		.nav-elem {
+			button {
+				font-size: $font-l;
+			}
+			&.end-tab {
+				.title {
+					font-size: $font-xl;
+				}
+			}
+		}
+	}
+	@media only screen and (max-width: 760px) {
+		.nav-elem {
+			&.end-tab {
+				margin-top: -2px;
+				.title {
+					font-size: $font-l;
+				}
+				>.flex >div >.flex {
+					min-width: 90px;
+					p {
+						font-size: $font-xs;
+					}
+				}
+			}
+		}
+	}
 }
