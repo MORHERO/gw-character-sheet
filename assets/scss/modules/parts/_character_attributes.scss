@@ -2,6 +2,8 @@
 	border: 1px $cl-font solid;
 	margin-right: 20px;
 	min-width: 160px;
+	width: 160px;
+	max-width: 160px;
 	.heading {
 		font-size: 24px;
 		text-align: center;
@@ -134,6 +136,22 @@
 					&.pos-12 {
 					}
 				}
+			}
+		}
+	}
+	@media only screen and (max-width: 1080px) {
+		.heading {
+			font-size: $font-xl;
+		}
+	}
+	@media only screen and (max-width: 940px) {
+		width: 100%;
+		max-width: 100%;
+		margin-bottom: 40px;
+
+		.attributes-wrapper {
+			>.flex {
+				flex-direction: row;
 			}
 		}
 	}
